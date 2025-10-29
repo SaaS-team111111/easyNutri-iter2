@@ -1,0 +1,72 @@
+# Project planning (不提交项目计划)
+plan.txt
+
+# Environment variables (敏感配置)
+.env
+.env.local
+.env.*.local
+
+# Rails secrets
+config/master.key
+config/credentials/*.key
+
+# Database config (如果包含敏感信息可以取消注释)
+# config/database.yml
+
+# Standard Rails ignores
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/public/uploads
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Ignore uploaded files in development
+/public/system
+
+# Ignore precompiled assets
+/public/assets
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore bundler config
+/.bundle
+
+# Ignore all logfiles and tempfiles
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Ignore master key for decrypting credentials and more
+/config/master.key
+
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Code coverage reports
+/coverage/
+*.out

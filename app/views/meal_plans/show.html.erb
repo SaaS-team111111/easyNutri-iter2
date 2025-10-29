@@ -1,0 +1,134 @@
+<h1>Meal Plan for <%= @meal_plan.user.name %></h1>
+
+<div class="plan-info">
+  <p><strong>Goal:</strong> <%= @meal_plan.goal %></p>
+  <p><strong>Duration:</strong> <%= @meal_plan.duration_days %> days</p>
+  <p><strong>Status:</strong> <%= @meal_plan.status %></p>
+  <p><strong>Created:</strong> <%= @meal_plan.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+</div>
+
+<h2>Detailed Meal Schedule</h2>
+
+<% if @entries_by_day.any? %>
+  <% @entries_by_day.each do |day_index, entries| %>
+    <div class="day-section">
+      <h3>Day <%= day_index + 1 %></h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Meal</th>
+            <th>Food</th>
+            <th>Amount (g)</th>
+            <th>Calories</th>
+            <th>Protein (g)</th>
+            <th>Carbs (g)</th>
+            <th>Fat (g)</th>
+            <th>Sodium (mg)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% entries.each do |entry| %>
+            <% multiplier = entry.grams / 100.0 %>
+            <tr>
+              <td class="meal-type">
+                <%= entry.meal_type.capitalize %>
+              </td>
+              <td><%= entry.food_item.name %></td>
+              <td><%= entry.grams %>g</td>
+              <td><%= (entry.food_item.calories_per_100g * multiplier).round %></td>
+              <td><%= (entry.food_item.protein_per_100g * multiplier).round(1) %></td>
+              <td><%= (entry.food_item.carbs_per_100g * multiplier).round(1) %></td>
+              <td><%= (entry.food_item.fat_per_100g * multiplier).round(1) %></td>
+              <td><%= (entry.food_item.sodium_mg_per_100g * multiplier).round %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <% day_total_calories = entries.sum { |e| (e.food_item.calories_per_100g * e.grams / 100.0).round } %>
+      <% day_total_sodium = entries.sum { |e| (e.food_item.sodium_mg_per_100g * e.grams / 100.0).round } %>
+      <p class="day-summary">
+        <strong>Daily Total:</strong> 
+        Calories: <%= day_total_calories %> kcal | 
+        Sodium: <%= day_total_sodium %> mg
+      </p>
+    </div>
+  <% end %>
+<% else %>
+  <p>No meal entries generated for this plan yet.</p>
+<% end %>
+
+<div class="actions">
+  <%= link_to "Back to Home", root_path, class: "button" %>
+</div>
+
+<style>
+  .plan-info {
+    background-color: #e7f3ff;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+  }
+  
+  .day-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
+  
+  .day-section h3 {
+    color: #007bff;
+    margin-top: 0;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin: 15px 0;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .meal-type {
+    font-weight: bold;
+    color: #28a745;
+  }
+  
+  .day-summary {
+    font-size: 1.1em;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-radius: 4px;
+  }
+  
+  .actions {
+    margin-top: 30px;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+</style>

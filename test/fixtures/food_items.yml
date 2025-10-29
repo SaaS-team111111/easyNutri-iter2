@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  calories_per_100g: 1
+  protein_per_100g: 1.5
+  carbs_per_100g: 1.5
+  fat_per_100g: 1.5
+  sodium_mg_per_100g: 1
+
+two:
+  name: MyString
+  calories_per_100g: 1
+  protein_per_100g: 1.5
+  carbs_per_100g: 1.5
+  fat_per_100g: 1.5
+  sodium_mg_per_100g: 1

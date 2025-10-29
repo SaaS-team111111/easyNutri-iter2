@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  meal_plan: one
+  food_item: one
+  day_index: 1
+  meal_type: MyString
+  grams: 1
+
+two:
+  meal_plan: two
+  food_item: two
+  day_index: 1
+  meal_type: MyString
+  grams: 1

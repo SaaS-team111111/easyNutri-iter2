@@ -1,0 +1,147 @@
+<h1>Create Meal Plan</h1>
+
+<%= form_with model: @meal_plan, url: meal_plans_path, local: true do |f| %>
+  <% if @meal_plan.errors.any? %>
+    <div class="errors">
+      <h3><%= pluralize(@meal_plan.errors.count, "error") %> prevented this meal plan from being saved:</h3>
+      <ul>
+        <% @meal_plan.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user_id, "Select User" %>
+    <%= f.select :user_id, 
+        options_from_collection_for_select(@users, :id, :name), 
+        { prompt: "Please select a user..." },
+        { required: true, class: "form-control" } %>
+    <p class="hint">Choose which user this meal plan is for</p>
+  </div>
+
+  <div class="field">
+    <%= f.label :goal, "Goal" %>
+    <%= f.select :goal, 
+        options_for_select(MealPlan::GOALS), 
+        { prompt: "Please select a goal..." },
+        { required: true, class: "form-control" } %>
+    <p class="hint">Select a health goal, the system will generate an appropriate meal plan</p>
+  </div>
+
+  <div class="field">
+    <%= f.label :duration_days, "Duration (days)" %>
+    <%= f.number_field :duration_days, min: 1, max: 30, value: 7, required: true, class: "form-control" %>
+    <p class="hint">Plan duration in days (1-30 days)</p>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Generate Plan", class: "button button-primary" %>
+    <%= link_to "Cancel", root_path, class: "button button-secondary" %>
+  </div>
+<% end %>
+
+<style>
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .field {
+    margin-bottom: 25px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .hint {
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+    font-style: italic;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+  }
+  
+  .button-primary {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .button-primary:hover {
+    background-color: #218838;
+  }
+  
+  .button-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .button-secondary:hover {
+    background-color: #5a6268;
+  }
+  
+  .errors {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+  }
+  
+  .errors h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .errors ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+</style>
