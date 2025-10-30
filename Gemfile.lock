@@ -154,6 +154,7 @@ GEM
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
     ffi (1.17.2-x64-mingw-ucrt)
+    ffi (1.17.2-x86_64-linux-gnu)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -204,8 +205,11 @@ GEM
     nio4r (2.7.4)
     nokogiri (1.18.10-x64-mingw-ucrt)
       racc (~> 1.4)
+    nokogiri (1.18.10-x86_64-linux-gnu)
+      racc (~> 1.4)
     pg (1.6.2)
     pg (1.6.2-x64-mingw-ucrt)
+    pg (1.6.2-x86_64-linux)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -340,6 +344,7 @@ GEM
 
 PLATFORMS
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
@@ -367,7 +372,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 3.2.9p265
+   ruby 3.2.2p53
 
 BUNDLED WITH
    2.7.2
