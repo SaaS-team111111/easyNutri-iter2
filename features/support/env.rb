@@ -8,7 +8,6 @@
 require 'simplecov'
 
 SimpleCov.start do
-  # Exclude non-app files
   add_filter '/test/'
   add_filter '/spec/'
   add_filter '/features/'
@@ -18,12 +17,10 @@ SimpleCov.start do
   add_filter '/bin/'
   add_filter '/lib/'
   
-  # Add groups
   add_group 'Models', 'app/models'
   add_group 'Controllers', 'app/controllers'
   add_group 'Helpers', 'app/helpers'
   
-  # Set command name
   command_name 'Cucumber Tests'
 end
 

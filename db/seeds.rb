@@ -1,9 +1,8 @@
-# db/seeds.rb
+
 require "json"
 
 puts "Starting to import food nutrition data..."
 
-# USDA FoodData Central JSON 文件路径
 json_file_path = Rails.root.join("db", "FoodData_Central_foundation_food_json_2025-04-24.json")
 
 if File.exist?(json_file_path)
@@ -17,7 +16,6 @@ if File.exist?(json_file_path)
   foods.each do |food|
     name = food["description"]
     
-    # 构建营养素查找映射
     nutrient_map = {}
     if food["foodNutrients"]
       food["foodNutrients"].each do |fn|
@@ -27,14 +25,12 @@ if File.exist?(json_file_path)
       end
     end
     
-    # 提取所需的营养素（每100g）
     calories = nutrient_map["Energy"]
     protein = nutrient_map["Protein"]
     carbs = nutrient_map["Carbohydrate, by difference"]
     fat = nutrient_map["Total lipid (fat)"]
     sodium = nutrient_map["Sodium, Na"]
     
-    # 只导入包含所有关键营养信息的食物
     if name && calories && protein && carbs && fat && sodium
       FoodItem.create!(
         name: name,
@@ -54,7 +50,6 @@ else
   puts "USDA data file not found, creating sample data..."
   puts "To import real data, place FoodData_Central_foundation_food_json_2025-04-24.json in the db/ directory"
   
-  # Create sample food data
   sample_foods = [
     {
       name: "Chicken Breast (cooked, skinless)",

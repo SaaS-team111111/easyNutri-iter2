@@ -1,4 +1,3 @@
-# World extensions for Cucumber
 module EasyNutriWorld
   def create_user(name:, height_cm: 170, weight_kg: 70, age: 30, sex: "M")
     User.create!(

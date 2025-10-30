@@ -1,8 +1,6 @@
 require 'uri'
 require 'cgi'
 
-## adapted from web_steps.rb from rottenpotatoes project
-
 Given(/^I am on (.+)$/) do |page_name|
   visit path_to(page_name)
 end

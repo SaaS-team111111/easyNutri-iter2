@@ -1,10 +1,7 @@
-# coverage_summary.rb
-# Print a summary of code coverage after tests run
 
 at_exit do
   if defined?(SimpleCov) && SimpleCov.running
     result = SimpleCov.result
-    # Format the result to generate HTML report
     result.format!
     
     if result
