@@ -6,7 +6,10 @@
 - Zian Zhang - zz3402
 - Ying Wang - yw4360
 
+## Here is Our Prototype!!
+
 Heroku Link: https://easynutri-group5-6c340379424a.herokuapp.com/
+##
 
 ### Install and Running/Testing
 
@@ -46,6 +49,16 @@ sudo port install postgresql14-server
 sudo port load postgresql14-server
 ```
 
+### Setup database
+```bash
+# Create databases
+rails db:create
+# Run migrations
+rails db:migrate
+# Load sample food data (required for testing)
+rails db:seed
+```
+
 Verify installation:
 ```bash
 psql --version
@@ -59,9 +72,17 @@ bundle exec rails s -b 0.0.0.0
 
 
 ### Run rspec and cucumber tests
+
+**Important:** Make sure database is set up first (see Setup database section above)
+
 ```bash
 bundle exec rspec
 bundle exec cucumber
+```
+
+**If you get "Migrations are pending" error:**
+```bash
+rails db:migrate
 ```
 Our Testing result:
 ![](./image.png)
