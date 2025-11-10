@@ -52,124 +52,572 @@ else
   
   sample_foods = [
     {
-      name: "Chicken Breast (cooked, skinless)",
-      calories_per_100g: 165,
-      protein_per_100g: 31.0,
-      carbs_per_100g: 0.0,
-      fat_per_100g: 3.6,
-      sodium_mg_per_100g: 74
+      "name": "Hummus (commercial)",
+      "calories_per_100g": 229,
+      "protein_per_100g": 7.35,
+      "carbs_per_100g": 14.9,
+      "fat_per_100g": 17.1,
+      "sodium_mg_per_100g": 438
     },
     {
-      name: "Brown Rice (cooked)",
-      calories_per_100g: 111,
-      protein_per_100g: 2.6,
-      carbs_per_100g: 23.0,
-      fat_per_100g: 0.9,
-      sodium_mg_per_100g: 5
+      "name": "Tomatoes (raw)",
+      "calories_per_100g": 27,
+      "protein_per_100g": 0.83,
+      "carbs_per_100g": 5.51,
+      "fat_per_100g": 0.63,
+      "sodium_mg_per_100g": 6
     },
     {
-      name: "Broccoli (cooked)",
-      calories_per_100g: 35,
-      protein_per_100g: 2.4,
-      carbs_per_100g: 7.2,
-      fat_per_100g: 0.4,
-      sodium_mg_per_100g: 33
+      "name": "Beans",
+      "calories_per_100g": 21,
+      "protein_per_100g": 1.04,
+      "carbs_per_100g": 4.11,
+      "fat_per_100g": 0.39,
+      "sodium_mg_per_100g": 282
     },
     {
-      name: "Egg (whole, cooked)",
-      calories_per_100g: 155,
-      protein_per_100g: 13.0,
-      carbs_per_100g: 1.1,
-      fat_per_100g: 11.0,
-      sodium_mg_per_100g: 124
+      "name": "Frankfurter",
+      "calories_per_100g": 314,
+      "protein_per_100g": 11.7,
+      "carbs_per_100g": 2.89,
+      "fat_per_100g": 28.0,
+      "sodium_mg_per_100g": 872
     },
     {
-      name: "Salmon (cooked)",
-      calories_per_100g: 206,
-      protein_per_100g: 22.0,
-      carbs_per_100g: 0.0,
-      fat_per_100g: 12.0,
-      sodium_mg_per_100g: 59
+      "name": "Nuts",
+      "calories_per_100g": 620,
+      "protein_per_100g": 20.4,
+      "carbs_per_100g": 16.2,
+      "fat_per_100g": 57.8,
+      "sodium_mg_per_100g": 256
     },
     {
-      name: "Tomato (raw)",
-      calories_per_100g: 18,
-      protein_per_100g: 0.9,
-      carbs_per_100g: 3.9,
-      fat_per_100g: 0.2,
-      sodium_mg_per_100g: 5
+      "name": "Kale (raw)",
+      "calories_per_100g": 35,
+      "protein_per_100g": 2.92,
+      "carbs_per_100g": 4.42,
+      "fat_per_100g": 1.49,
+      "sodium_mg_per_100g": 53
     },
     {
-      name: "Oatmeal",
-      calories_per_100g: 68,
-      protein_per_100g: 2.4,
-      carbs_per_100g: 12.0,
-      fat_per_100g: 1.4,
-      sodium_mg_per_100g: 49
+      "name": "Egg",
+      "calories_per_100g": 150,
+      "protein_per_100g": 12.3,
+      "carbs_per_100g": 0.91,
+      "fat_per_100g": 10.3,
+      "sodium_mg_per_100g": 121
     },
     {
-      name: "Banana",
-      calories_per_100g: 89,
-      protein_per_100g: 1.1,
-      carbs_per_100g: 23.0,
-      fat_per_100g: 0.3,
-      sodium_mg_per_100g: 1
+      "name": "Egg (dried)",
+      "calories_per_100g": 376,
+      "protein_per_100g": 79.9,
+      "carbs_per_100g": 6.02,
+      "fat_per_100g": 0.65,
+      "sodium_mg_per_100g": 1250
     },
     {
-      name: "Beef (lean, cooked)",
-      calories_per_100g: 250,
-      protein_per_100g: 26.0,
-      carbs_per_100g: 0.0,
-      fat_per_100g: 16.0,
-      sodium_mg_per_100g: 72
+      "name": "Onion rings",
+      "calories_per_100g": 288,
+      "protein_per_100g": 4.52,
+      "carbs_per_100g": 36.3,
+      "fat_per_100g": 14.4,
+      "sodium_mg_per_100g": 374
     },
     {
-      name: "Spinach (cooked)",
-      calories_per_100g: 23,
-      protein_per_100g: 2.9,
-      carbs_per_100g: 3.8,
-      fat_per_100g: 0.3,
-      sodium_mg_per_100g: 70
+      "name": "Pickles",
+      "calories_per_100g": 12,
+      "protein_per_100g": 0.48,
+      "carbs_per_100g": 1.99,
+      "fat_per_100g": 0.43,
+      "sodium_mg_per_100g": 808
     },
     {
-      name: "Tofu",
-      calories_per_100g: 76,
-      protein_per_100g: 8.0,
-      carbs_per_100g: 1.9,
-      fat_per_100g: 4.8,
-      sodium_mg_per_100g: 7
+      "name": "parmesan Cheese",
+      "calories_per_100g": 421,
+      "protein_per_100g": 29.6,
+      "carbs_per_100g": 12.4,
+      "fat_per_100g": 28.0,
+      "sodium_mg_per_100g": 1750
     },
     {
-      name: "Carrot (raw)",
-      calories_per_100g: 41,
-      protein_per_100g: 0.9,
-      carbs_per_100g: 10.0,
-      fat_per_100g: 0.2,
-      sodium_mg_per_100g: 69
+      "name": "pasteurized process Cheese",
+      "calories_per_100g": 366,
+      "protein_per_100g": 18.0,
+      "carbs_per_100g": 5.27,
+      "fat_per_100g": 30.6,
+      "sodium_mg_per_100g": 1660
     },
     {
-      name: "Lentils (cooked)",
-      calories_per_100g: 116,
-      protein_per_100g: 9.0,
-      carbs_per_100g: 20.0,
-      fat_per_100g: 0.4,
-      sodium_mg_per_100g: 2
+      "name": "Grapefruit juice",
+      "calories_per_100g": 37,
+      "protein_per_100g": 0.55,
+      "carbs_per_100g": 7.59,
+      "fat_per_100g": 0.7,
+      "sodium_mg_per_100g": 1
     },
     {
-      name: "Sweet Potato (baked)",
-      calories_per_100g: 90,
-      protein_per_100g: 2.0,
-      carbs_per_100g: 21.0,
-      fat_per_100g: 0.2,
-      sodium_mg_per_100g: 36
+      "name": "Peaches (raw)",
+      "calories_per_100g": 42,
+      "protein_per_100g": 0.91,
+      "carbs_per_100g": 10.1,
+      "fat_per_100g": 0.27,
+      "sodium_mg_per_100g": 13
     },
     {
-      name: "Greek Yogurt (non-fat)",
-      calories_per_100g: 59,
-      protein_per_100g: 10.0,
-      carbs_per_100g: 3.6,
-      fat_per_100g: 0.4,
-      sodium_mg_per_100g: 36
+      "name": "Seeds",
+      "calories_per_100g": 612,
+      "protein_per_100g": 21.0,
+      "carbs_per_100g": 17.1,
+      "fat_per_100g": 56.1,
+      "sodium_mg_per_100g": 532
+    },
+    {
+      "name": "white Bread",
+      "calories_per_100g": 270,
+      "protein_per_100g": 9.43,
+      "carbs_per_100g": 49.2,
+      "fat_per_100g": 3.59,
+      "sodium_mg_per_100g": 477
+    },
+    {
+      "name": "Kale",
+      "calories_per_100g": 36,
+      "protein_per_100g": 2.94,
+      "carbs_per_100g": 5.3,
+      "fat_per_100g": 1.21,
+      "sodium_mg_per_100g": 16
+    },
+    {
+      "name": "Mustard",
+      "calories_per_100g": 61,
+      "protein_per_100g": 4.25,
+      "carbs_per_100g": 5.3,
+      "fat_per_100g": 3.38,
+      "sodium_mg_per_100g": 1100
+    },
+    {
+      "name": "Kiwifruit (raw)",
+      "calories_per_100g": 58,
+      "protein_per_100g": 1.06,
+      "carbs_per_100g": 14.0,
+      "fat_per_100g": 0.44,
+      "sodium_mg_per_100g": 5
+    },
+    {
+      "name": "Nectarines (raw)",
+      "calories_per_100g": 39,
+      "protein_per_100g": 1.06,
+      "carbs_per_100g": 9.18,
+      "fat_per_100g": 0.28,
+      "sodium_mg_per_100g": 13
+    },
+    {
+      "name": "cheddar Cheese",
+      "calories_per_100g": 408,
+      "protein_per_100g": 23.3,
+      "carbs_per_100g": 2.44,
+      "fat_per_100g": 34.0,
+      "sodium_mg_per_100g": 654
+    },
+    {
+      "name": "cottage Cheese",
+      "calories_per_100g": 84,
+      "protein_per_100g": 11.0,
+      "carbs_per_100g": 4.31,
+      "fat_per_100g": 2.3,
+      "sodium_mg_per_100g": 321
+    },
+    {
+      "name": "mozzarella Cheese",
+      "calories_per_100g": 298,
+      "protein_per_100g": 23.7,
+      "carbs_per_100g": 4.44,
+      "fat_per_100g": 20.4,
+      "sodium_mg_per_100g": 699
+    },
+    {
+      "name": "Yogurt",
+      "calories_per_100g": 61,
+      "protein_per_100g": 10.3,
+      "carbs_per_100g": 3.64,
+      "fat_per_100g": 0.37,
+      "sodium_mg_per_100g": 36
+    },
+    {
+      "name": "coconut Oil",
+      "calories_per_100g": 833,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 0.84,
+      "fat_per_100g": 99.1,
+      "sodium_mg_per_100g": 0
+    },
+    {
+      "name": "Chicken",
+      "calories_per_100g": 156,
+      "protein_per_100g": 23.9,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 5.95,
+      "sodium_mg_per_100g": 117
+    },
+    {
+      "name": "Sauce",
+      "calories_per_100g": 45,
+      "protein_per_100g": 1.41,
+      "carbs_per_100g": 8.05,
+      "fat_per_100g": 1.48,
+      "sodium_mg_per_100g": 419
+    },
+    {
+      "name": "Ham, sliced, pre-packaged, deli meat",
+      "calories_per_100g": 106,
+      "protein_per_100g": 16.7,
+      "carbs_per_100g": 0.27,
+      "fat_per_100g": 3.73,
+      "sodium_mg_per_100g": 1040
+    },
+    {
+      "name": "Olives",
+      "calories_per_100g": 130,
+      "protein_per_100g": 1.15,
+      "carbs_per_100g": 4.96,
+      "fat_per_100g": 12.9,
+      "sodium_mg_per_100g": 1620
+    },
+    {
+      "name": "Cookies",
+      "calories_per_100g": 430,
+      "protein_per_100g": 5.79,
+      "carbs_per_100g": 69.6,
+      "fat_per_100g": 14.3,
+      "sodium_mg_per_100g": 314
+    },
+    {
+      "name": "Tomatoes",
+      "calories_per_100g": 18,
+      "protein_per_100g": 0.84,
+      "carbs_per_100g": 3.32,
+      "fat_per_100g": 0.5,
+      "sodium_mg_per_100g": 125
+    },
+    {
+      "name": "Fish (raw)",
+      "calories_per_100g": 74,
+      "protein_per_100g": 16.3,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 0.45,
+      "sodium_mg_per_100g": 213
+    },
+    {
+      "name": "Fish",
+      "calories_per_100g": 90,
+      "protein_per_100g": 19.0,
+      "carbs_per_100g": 0.08,
+      "fat_per_100g": 0.94,
+      "sodium_mg_per_100g": 219
+    },
+    {
+      "name": "Restaurant",
+      "calories_per_100g": 174,
+      "protein_per_100g": 3.84,
+      "carbs_per_100g": 32.5,
+      "fat_per_100g": 3.19,
+      "sodium_mg_per_100g": 361
+    },
+    {
+      "name": "Restaurant, Latino, pupusas con frijoles",
+      "calories_per_100g": 229,
+      "protein_per_100g": 5.59,
+      "carbs_per_100g": 31.5,
+      "fat_per_100g": 9.01,
+      "sodium_mg_per_100g": 305
+    },
+    {
+      "name": "whole-wheat Bread",
+      "calories_per_100g": 254,
+      "protein_per_100g": 12.3,
+      "carbs_per_100g": 43.1,
+      "fat_per_100g": 3.55,
+      "sodium_mg_per_100g": 450
+    },
+    {
+      "name": "Beef",
+      "calories_per_100g": 176,
+      "protein_per_100g": 27.7,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 6.36,
+      "sodium_mg_per_100g": 54
+    },
+    {
+      "name": "Beef (raw)",
+      "calories_per_100g": 155,
+      "protein_per_100g": 22.8,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 6.39,
+      "sodium_mg_per_100g": 45
+    },
+    {
+      "name": "Carrots",
+      "calories_per_100g": 37,
+      "protein_per_100g": 0.81,
+      "carbs_per_100g": 7.92,
+      "fat_per_100g": 0.47,
+      "sodium_mg_per_100g": 66
+    },
+    {
+      "name": "dry white Cheese",
+      "calories_per_100g": 326,
+      "protein_per_100g": 24.5,
+      "carbs_per_100g": 2.07,
+      "fat_per_100g": 24.3,
+      "sodium_mg_per_100g": 1810
+    },
+    {
+      "name": "ricotta Cheese",
+      "calories_per_100g": 157,
+      "protein_per_100g": 7.81,
+      "carbs_per_100g": 6.86,
+      "fat_per_100g": 11.0,
+      "sodium_mg_per_100g": 105
+    },
+    {
+      "name": "swiss Cheese",
+      "calories_per_100g": 393,
+      "protein_per_100g": 27.0,
+      "carbs_per_100g": 1.44,
+      "fat_per_100g": 31.0,
+      "sodium_mg_per_100g": 185
+    },
+    {
+      "name": "Figs",
+      "calories_per_100g": 249,
+      "protein_per_100g": 3.3,
+      "carbs_per_100g": 63.9,
+      "fat_per_100g": 0.92,
+      "sodium_mg_per_100g": 10
+    },
+    {
+      "name": "Melons (raw)",
+      "calories_per_100g": 34,
+      "protein_per_100g": 0.82,
+      "carbs_per_100g": 8.16,
+      "fat_per_100g": 0.18,
+      "sodium_mg_per_100g": 30
+    },
+    {
+      "name": "Oranges",
+      "calories_per_100g": 47,
+      "protein_per_100g": 0.91,
+      "carbs_per_100g": 11.8,
+      "fat_per_100g": 0.15,
+      "sodium_mg_per_100g": 9
+    },
+    {
+      "name": "lowfat Milk",
+      "calories_per_100g": 43,
+      "protein_per_100g": 3.38,
+      "carbs_per_100g": 5.18,
+      "fat_per_100g": 0.95,
+      "sodium_mg_per_100g": 39
+    },
+    {
+      "name": "Pears",
+      "calories_per_100g": 57,
+      "protein_per_100g": 0.38,
+      "carbs_per_100g": 15.1,
+      "fat_per_100g": 0.16,
+      "sodium_mg_per_100g": 7
+    },
+    {
+      "name": "nonfat Milk",
+      "calories_per_100g": 34,
+      "protein_per_100g": 3.43,
+      "carbs_per_100g": 4.92,
+      "fat_per_100g": 0.08,
+      "sodium_mg_per_100g": 41
+    },
+    {
+      "name": "reduced fat Milk",
+      "calories_per_100g": 50,
+      "protein_per_100g": 3.36,
+      "carbs_per_100g": 4.9,
+      "fat_per_100g": 1.9,
+      "sodium_mg_per_100g": 39
+    },
+    {
+      "name": "Sausage",
+      "calories_per_100g": 328,
+      "protein_per_100g": 13.3,
+      "carbs_per_100g": 3.37,
+      "fat_per_100g": 28.7,
+      "sodium_mg_per_100g": 866
+    },
+    {
+      "name": "whole Milk",
+      "calories_per_100g": 60,
+      "protein_per_100g": 3.27,
+      "carbs_per_100g": 4.63,
+      "fat_per_100g": 3.2,
+      "sodium_mg_per_100g": 38
+    },
+    {
+      "name": "Sausage (raw)",
+      "calories_per_100g": 169,
+      "protein_per_100g": 16.7,
+      "carbs_per_100g": 0.93,
+      "fat_per_100g": 10.4,
+      "sodium_mg_per_100g": 599
+    },
+    {
+      "name": "Sugars",
+      "calories_per_100g": 385,
+      "protein_per_100g": 0.0,
+      "carbs_per_100g": 99.6,
+      "fat_per_100g": 0.32,
+      "sodium_mg_per_100g": 1
+    },
+    {
+      "name": "Turkey",
+      "calories_per_100g": 220,
+      "protein_per_100g": 27.1,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 11.6,
+      "sodium_mg_per_100g": 90
+    },
+    {
+      "name": "Ham",
+      "calories_per_100g": 121,
+      "protein_per_100g": 19.6,
+      "carbs_per_100g": 2.36,
+      "fat_per_100g": 3.68,
+      "sodium_mg_per_100g": 1030
+    },
+    {
+      "name": "American Cheese",
+      "calories_per_100g": 375,
+      "protein_per_100g": 17.5,
+      "carbs_per_100g": 6.35,
+      "fat_per_100g": 31.1,
+      "sodium_mg_per_100g": 1600
+    },
+    {
+      "name": "Broccoli (raw)",
+      "calories_per_100g": 31,
+      "protein_per_100g": 2.57,
+      "carbs_per_100g": 6.27,
+      "fat_per_100g": 0.34,
+      "sodium_mg_per_100g": 36
+    },
+    {
+      "name": "Ketchup",
+      "calories_per_100g": 117,
+      "protein_per_100g": 1.11,
+      "carbs_per_100g": 26.8,
+      "fat_per_100g": 0.55,
+      "sodium_mg_per_100g": 949
+    },
+    {
+      "name": "Eggs",
+      "calories_per_100g": 148,
+      "protein_per_100g": 12.4,
+      "carbs_per_100g": 0.96,
+      "fat_per_100g": 9.96,
+      "sodium_mg_per_100g": 129
+    },
+    {
+      "name": "Pork",
+      "calories_per_100g": 500,
+      "protein_per_100g": 40.9,
+      "carbs_per_100g": 2.1,
+      "fat_per_100g": 36.5,
+      "sodium_mg_per_100g": 1830
+    },
+    {
+      "name": "Flour",
+      "calories_per_100g": 366,
+      "protein_per_100g": 10.9,
+      "carbs_per_100g": 77.3,
+      "fat_per_100g": 1.48,
+      "sodium_mg_per_100g": 2
+    },
+    {
+      "name": "Onions (raw)",
+      "calories_per_100g": 44,
+      "protein_per_100g": 0.94,
+      "carbs_per_100g": 9.93,
+      "fat_per_100g": 0.1,
+      "sodium_mg_per_100g": 1
+    },
+    {
+      "name": "Bananas (raw)",
+      "calories_per_100g": 97,
+      "protein_per_100g": 0.74,
+      "carbs_per_100g": 23.0,
+      "fat_per_100g": 0.29,
+      "sodium_mg_per_100g": 0
+    },
+    {
+      "name": "Chicken Breast (cooked)",
+      "calories_per_100g": 165,
+      "protein_per_100g": 31.0,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 3.6,
+      "sodium_mg_per_100g": 74
+    },
+    {
+      "name": "Brown Rice (cooked)",
+      "calories_per_100g": 111,
+      "protein_per_100g": 2.6,
+      "carbs_per_100g": 23.0,
+      "fat_per_100g": 0.9,
+      "sodium_mg_per_100g": 5
+    },
+    {
+      "name": "Broccoli (cooked)",
+      "calories_per_100g": 35,
+      "protein_per_100g": 2.4,
+      "carbs_per_100g": 7.2,
+      "fat_per_100g": 0.4,
+      "sodium_mg_per_100g": 33
+    },
+    {
+      "name": "Egg (whole, cooked)",
+      "calories_per_100g": 155,
+      "protein_per_100g": 13.0,
+      "carbs_per_100g": 1.1,
+      "fat_per_100g": 11.0,
+      "sodium_mg_per_100g": 124
+    },
+    {
+      "name": "Salmon (cooked)",
+      "calories_per_100g": 206,
+      "protein_per_100g": 22.0,
+      "carbs_per_100g": 0.0,
+      "fat_per_100g": 12.0,
+      "sodium_mg_per_100g": 59
+    },
+    {
+      "name": "Banana (raw)",
+      "calories_per_100g": 89,
+      "protein_per_100g": 1.1,
+      "carbs_per_100g": 23.0,
+      "fat_per_100g": 0.3,
+      "sodium_mg_per_100g": 1
+    },
+    {
+      "name": "Oatmeal (cooked)",
+      "calories_per_100g": 68,
+      "protein_per_100g": 2.4,
+      "carbs_per_100g": 12.0,
+      "fat_per_100g": 1.4,
+      "sodium_mg_per_100g": 49
+    },
+    {
+      "name": "Apple (raw)",
+      "calories_per_100g": 52,
+      "protein_per_100g": 0.3,
+      "carbs_per_100g": 13.8,
+      "fat_per_100g": 0.2,
+      "sodium_mg_per_100g": 1
     }
   ]
   

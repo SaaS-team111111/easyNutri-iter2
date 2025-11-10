@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_28_210808) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_10_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "daily_trackings", force: :cascade do |t|
+    t.bigint "meal_plan_id", null: false
+    t.integer "day_index", null: false
+    t.string "feedback", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meal_plan_id", "day_index"], name: "index_daily_trackings_on_meal_plan_id_and_day_index", unique: true
+    t.index ["meal_plan_id"], name: "index_daily_trackings_on_meal_plan_id"
+  end
 
   create_table "food_items", force: :cascade do |t|
     t.string "name"
@@ -44,6 +54,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_210808) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "current_day", default: 0, null: false
     t.index ["user_id"], name: "index_meal_plans_on_user_id"
   end
 
@@ -57,6 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_210808) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "daily_trackings", "meal_plans"
   add_foreign_key "meal_entries", "food_items"
   add_foreign_key "meal_entries", "meal_plans"
   add_foreign_key "meal_plans", "users"

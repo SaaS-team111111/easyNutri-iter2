@@ -1,6 +1,26 @@
 <h1>Create Meal Plan</h1>
 
-<%= form_with model: @meal_plan, url: meal_plans_path, local: true do |f| %>
+<% if @show_replace_modal %>
+  <div id="replaceModal" class="modal" style="display: block;">
+    <div class="modal-content replace-modal">
+      <h3>Active Meal Plan Exists</h3>
+      <p>This user already has an active meal plan. What would you like to do?</p>
+      <div class="modal-actions">
+        <%= form_with url: meal_plans_path, method: :post, data: { turbo: false }, class: "replace-form" do |f| %>
+          <%= hidden_field_tag 'meal_plan[user_id]', @meal_plan&.user_id %>
+          <%= hidden_field_tag 'meal_plan[goal]', @meal_plan&.goal %>
+          <%= hidden_field_tag 'meal_plan[duration_days]', @meal_plan&.duration_days %>
+          <%= hidden_field_tag :replace_existing, 'true' %>
+          <%= submit_tag "Delete Old & Create New", class: "button button-danger" %>
+        <% end %>
+        <%= link_to "Cancel", new_meal_plan_path, class: "button button-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="form-container" style="<%= 'filter: blur(5px); pointer-events: none;' if @show_replace_modal %>">
+  <%= form_with model: @meal_plan, url: meal_plans_path, data: { turbo: false } do |f| %>
   <% if @meal_plan.errors.any? %>
     <div class="errors">
       <h3><%= pluralize(@meal_plan.errors.count, "error") %> prevented this meal plan from being saved:</h3>
@@ -41,11 +61,16 @@
     <%= link_to "Cancel", root_path, class: "button button-secondary" %>
   </div>
 <% end %>
+</div>
 
 <style>
   h1 {
     color: #333;
     margin-bottom: 30px;
+  }
+  
+  .form-container {
+    transition: filter 0.3s;
   }
   
   form {
@@ -144,4 +169,112 @@
     margin: 0;
     padding-left: 20px;
   }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .alert-modal {
+    background-color: white;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  
+  .alert-modal h3 {
+    color: #856404;
+    margin: 0 0 15px 0;
+    font-size: 24px;
+  }
+  
+  .alert-modal p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .replace-modal {
+    background-color: white;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  
+  .replace-modal h3 {
+    color: #dc3545;
+    margin: 0 0 15px 0;
+    font-size: 24px;
+  }
+  
+  .replace-modal p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .modal-actions form,
+  .modal-actions .replace-form {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    max-width: none;
+  }
+  
+  .button-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  
+  .button-danger:hover {
+    background-color: #c82333;
+  }
 </style>
+
+<script>
+  function closeAlertModal() {
+    const alertModal = document.getElementById('alertModal');
+    if (alertModal) {
+      alertModal.style.display = 'none';
+    }
+  }
+  
+  window.onclick = function(event) {
+    const alertModal = document.getElementById('alertModal');
+    const replaceModal = document.getElementById('replaceModal');
+    
+    if (alertModal && event.target == alertModal) {
+      closeAlertModal();
+    }
+    
+    if (replaceModal && event.target == replaceModal) {
+      window.location.href = '<%= new_meal_plan_path %>';
+    }
+  }
+</script>

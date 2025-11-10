@@ -9,6 +9,30 @@
 ## Here is Our Prototype!!
 
 Heroku Link: https://easynutri-group5-6c340379424a.herokuapp.com/
+
+## Features
+
+### Main Interface
+- **User Management**: Create User and Create Meal Plan buttons are located at the top alongside the EasyNutri title
+- **User Selection**: Main interface allows you to select a user from the list
+- **Single Active Meal Plan**: Each user now has only one current active meal plan
+
+### Daily Meal Plan View
+Once a user is selected, the interface displays:
+- Current active meal plan details
+- Today's recommended menu at the bottom
+- **Next Button**: Navigate to the next day's menu
+
+### Smart Tracking & Recommendations
+Before advancing to the next day, a dialog will prompt you to update today's meal plan execution:
+
+**Three tracking options:**
+1. **Followed strictly** - Maintained the recommended meal plan
+2. **Ate less healthy** - Consumed less healthy foods than recommended
+3. **Ate healthier** - Consumed healthier foods than recommended
+
+Based on your selection, the system will optimize and adjust recommendations for the next day and future meals.
+
 ##
 
 ### Install and Running/Testing
