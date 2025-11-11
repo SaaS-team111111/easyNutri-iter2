@@ -68,6 +68,11 @@ class MealPlansController < ApplicationController
       .includes(:food_item)
       .order(:day_index, :meal_type)
       .group_by(&:day_index)
+    
+    # Calculate progress data
+    @goal_progress = @meal_plan.goal_progress
+    @goal_targets = @meal_plan.goal_targets
+    @nutrition_consumed = @meal_plan.actual_nutrition_consumed
   end
 
   private
