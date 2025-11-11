@@ -12,8 +12,64 @@
 <% if @entries_by_day.any? %>
   <% @entries_by_day.each do |day_index, entries| %>
     <div class="day-section">
-      <h3>Day <%= day_index + 1 %></h3>
+      <h3>
+        Day <%= day_index + 1 %>
+        <% if day_index < @meal_plan.current_day %>
+          <span class="day-status past">Past Day</span>
+        <% elsif day_index == @meal_plan.current_day %>
+          <span class="day-status current">Current Day</span>
+        <% else %>
+          <span class="day-status future">Future Recommendation</span>
+        <% end %>
+      </h3>
       
+      <!-- Show actual meals if user used "Eat What I Want" for past days -->
+      <% if @actual_meals_by_day[day_index].present? %>
+        <h4 class="actual-meals-header">✅ What You Actually Ate:</h4>
+        <table class="actual-meals-table">
+          <thead>
+            <tr>
+              <th>Meal</th>
+              <th>Food</th>
+              <th>Amount (g)</th>
+              <th>Calories</th>
+              <th>Protein (g)</th>
+              <th>Carbs (g)</th>
+              <th>Fat (g)</th>
+              <th>Sodium (mg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @actual_meals_by_day[day_index].each do |actual_entry| %>
+              <% multiplier = actual_entry.grams / 100.0 %>
+              <tr class="actual-meal-row">
+                <td class="meal-type">
+                  <%= actual_entry.meal_type.capitalize %>
+                </td>
+                <td><%= actual_entry.food_item.name %></td>
+                <td><%= actual_entry.grams %>g</td>
+                <td><%= (actual_entry.food_item.calories_per_100g * multiplier).round %></td>
+                <td><%= (actual_entry.food_item.protein_per_100g * multiplier).round(1) %></td>
+                <td><%= (actual_entry.food_item.carbs_per_100g * multiplier).round(1) %></td>
+                <td><%= (actual_entry.food_item.fat_per_100g * multiplier).round(1) %></td>
+                <td><%= (actual_entry.food_item.sodium_mg_per_100g * multiplier).round %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        
+        <% actual_total_calories = @actual_meals_by_day[day_index].sum { |e| (e.food_item.calories_per_100g * e.grams / 100.0).round } %>
+        <% actual_total_sodium = @actual_meals_by_day[day_index].sum { |e| (e.food_item.sodium_mg_per_100g * e.grams / 100.0).round } %>
+        <p class="day-summary actual">
+          <strong>Actual Total:</strong> 
+          Calories: <%= actual_total_calories %> kcal | 
+          Sodium: <%= actual_total_sodium %> mg
+        </p>
+        
+        <h4 class="recommended-header">📋 Our Recommendation Was:</h4>
+      <% end %>
+      
+      <!-- Always show recommended meals (default or future) -->
       <table>
         <thead>
           <tr>
@@ -48,8 +104,8 @@
       
       <% day_total_calories = entries.sum { |e| (e.food_item.calories_per_100g * e.grams / 100.0).round } %>
       <% day_total_sodium = entries.sum { |e| (e.food_item.sodium_mg_per_100g * e.grams / 100.0).round } %>
-      <p class="day-summary">
-        <strong>Daily Total:</strong> 
+      <p class="day-summary recommended">
+        <strong><%= day_index >= @meal_plan.current_day ? "Recommended Total:" : "Original Recommendation:" %></strong> 
         Calories: <%= day_total_calories %> kcal | 
         Sodium: <%= day_total_sodium %> mg
       </p>
@@ -130,5 +186,59 @@
   
   .button:hover {
     background-color: #0056b3;
+  }
+  
+  .day-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-left: 15px;
+    font-weight: normal;
+  }
+  
+  .day-status.past {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .day-status.current {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .day-status.future {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .actual-meals-header {
+    color: #28a745;
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .recommended-header {
+    color: #007bff;
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .actual-meals-table thead th {
+    background-color: #28a745;
+  }
+  
+  .actual-meal-row {
+    background-color: #f1f8f4;
+  }
+  
+  .day-summary.actual {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+  }
+  
+  .day-summary.recommended {
+    background-color: #d1ecf1;
+    border-left: 4px solid #007bff;
   }
 </style>
