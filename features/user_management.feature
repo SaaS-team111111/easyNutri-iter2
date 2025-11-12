@@ -3,7 +3,6 @@ Feature: User Management
   I want to register and create my profile
   So that I can start using the meal planning service
 
-  ## happy path
   Scenario: New user creates their profile
     Given I am on the dashboard page
     When I follow "Create User"
@@ -18,7 +17,6 @@ Feature: User Management
     Then I should be on the dashboard page
     And I should see "Qianyi Fan"
 
-  ## sad path
   Scenario: User cannot create profile without required information
     Given I am on the new user page
     When I press "Create User"

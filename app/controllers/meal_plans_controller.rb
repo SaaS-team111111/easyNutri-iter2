@@ -6,21 +6,27 @@ class MealPlansController < ApplicationController
   end
 
   def create
-    user = User.find(meal_plan_params[:user_id])
+    @meal_plan = MealPlan.new(meal_plan_params)
+    @meal_plan.status = "active"
+    @meal_plan.current_day = 0
+    
+    # Validate meal plan first to catch missing user_id
+    unless @meal_plan.valid?
+      @users = User.all
+      render :new
+      return
+    end
+    
+    user = @meal_plan.user
     
     if params[:replace_existing] == 'true'
       user.meal_plans.where(status: "active").destroy_all
     elsif user.has_active_meal_plan?
-      @meal_plan = MealPlan.new(meal_plan_params)
       @users = User.all
       @show_replace_modal = true
       render :new
       return
     end
-    
-    @meal_plan = MealPlan.new(meal_plan_params)
-    @meal_plan.status = "active"
-    @meal_plan.current_day = 0
 
     if @meal_plan.save
       generate_plan_entries(@meal_plan)

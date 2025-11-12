@@ -233,7 +233,7 @@ class MealPlan < ApplicationRecord
   private
   
   def user_can_only_have_one_active_plan
-    if status == "active" && user.meal_plans.where(status: "active").where.not(id: id).exists?
+    if status == "active" && user && user.meal_plans.where(status: "active").where.not(id: id).exists?
       errors.add(:base, "User already has an active meal plan")
     end
   end

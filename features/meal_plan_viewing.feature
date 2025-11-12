@@ -21,3 +21,4 @@ Feature: Viewing Meal Plans
     Then I should see "Easy-Nutri Dashboard"
     And I should see "View User's Meal Plans"
 
+

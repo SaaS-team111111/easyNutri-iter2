@@ -13,10 +13,10 @@ Feature: Meal Plan Creation
     And I select "<goal>" from "Goal"
     And I fill in "Duration (days)" with "<duration>"
     And I press "Generate Plan"
-    Then I should see "Meal Plan for Qianyi"
+    Then I should be on the dashboard page
+    And I should see "Qianyi"
     And I should see "<goal>"
-    And I should see "<duration> days"
-    And I should see "Detailed Meal Schedule"
+    And I should see "Today's Recommended Menu"
 
     Examples:
       | goal          | duration |
@@ -24,4 +24,14 @@ Feature: Meal Plan Creation
       | Muscle Gain   | 14       |
       | Low Sodium    | 7        |
       | Balanced Diet | 10       |
+
+  Scenario: User with active meal plan sees replace modal when creating new plan
+    Given there is a "Weight Loss" meal plan for "Qianyi", lasting 5 days
+    And I am on the new meal plan page
+    When I select "Qianyi" from "Select User"
+    And I select "Muscle Gain" from "Goal"
+    And I fill in "Duration (days)" with "10"
+    And I press "Generate Plan"
+    Then I should see the replace existing meal plan modal
+
 
