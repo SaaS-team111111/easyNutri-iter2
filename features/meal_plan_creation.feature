@@ -33,5 +33,4 @@ Feature: Meal Plan Creation
     And I fill in "Duration (days)" with "10"
     And I press "Generate Plan"
     Then I should see the replace existing meal plan modal
-
-
+    Then the recommended nutrition should contain values for all nutrients

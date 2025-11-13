@@ -51,11 +51,9 @@ Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |
   )
   meal_plan.save!
   
-  # Generate meal entries for the plan
   all_foods = FoodItem.all.to_a
   
   if all_foods.present?
-    # Select foods based on goal
     case meal_plan.goal
     when "Low Sodium"
       foods = all_foods.sort_by { |f| f.sodium_mg_per_100g }.take(15)
@@ -71,9 +69,7 @@ Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |
     
     foods = all_foods.take(5) if foods.size < 5
     
-    # Generate meal entries and recommendations
     (0...meal_plan.duration_days).each do |day|
-      # Generate default meal entries
       MealEntry.create!(
         meal_plan: meal_plan,
         food_item: foods.sample,
@@ -98,7 +94,6 @@ Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |
         grams: rand(200..300)
       )
       
-      # Generate meal recommendations (multiple options for "Eat What I Want")
       foods.sample(4).each do |food|
         MealRecommendation.create!(
           meal_plan: meal_plan,
@@ -147,24 +142,20 @@ Then(/^the meal plan should be created successfully$/) do
   expect(MealPlan.count).to be > 0
 end
 
-# Steps for testing new functionality in iteration 2
 Given(/^the meal plan has (\d+) days? completed with "([^"]*)" feedback$/) do |days, feedback|
   meal_plan = MealPlan.last
   days_to_complete = days.to_i
   
   (0...days_to_complete).each do |day_index|
-    # Create daily tracking
     DailyTracking.create!(
       meal_plan: meal_plan,
       day_index: day_index,
       feedback: feedback
     )
     
-    # Advance current_day
     meal_plan.increment!(:current_day)
   end
   
-  # Update status to completed if current_day >= duration_days
   if meal_plan.current_day >= meal_plan.duration_days
     meal_plan.update(status: "completed")
   end
@@ -195,7 +186,6 @@ Then(/^the goal progress should show non-zero values$/) do
       expect(data[:current]).to be >= 0
     end
   else
-    # For single metric goals
     first_metric = progress.values.first
     expect(first_metric[:current]).to be >= 0
   end
@@ -205,10 +195,7 @@ Given(/^the meal plan has actual meals eaten for day (\d+) with:$/) do |day, tab
   meal_plan = MealPlan.last
   day_index = day.to_i - 1
   
-  # First, make sure we've advanced to this day
-  # We need to advance current_day to be past this day so the meals are counted as "past"
   if meal_plan.current_day <= day_index
-    # Create daily trackings for all days before this day
     (meal_plan.current_day...day_index).each do |d|
       DailyTracking.create!(
         meal_plan: meal_plan,
@@ -218,7 +205,6 @@ Given(/^the meal plan has actual meals eaten for day (\d+) with:$/) do |day, tab
       meal_plan.increment!(:current_day)
     end
     
-    # Then advance one more day so current_day > day_index
     DailyTracking.create!(
       meal_plan: meal_plan,
       day_index: day_index,
@@ -227,7 +213,6 @@ Given(/^the meal plan has actual meals eaten for day (\d+) with:$/) do |day, tab
     meal_plan.increment!(:current_day)
   end
   
-  # Now create the actual meals
   table.hashes.each do |row|
     food = FoodItem.find_by(name: row['Food'])
     raise "Food #{row['Food']} not found" unless food
@@ -259,7 +244,6 @@ Then(/^the recommended nutrition should contain values for all nutrients$/) do
   expect(recommended[:fat]).to be > 0
 end
 
-# Steps for advance_day testing
 Then(/^I navigate to advance the meal plan$/) do
   meal_plan = MealPlan.last
   @meal_plan_id = meal_plan.id
@@ -279,17 +263,14 @@ end
 When(/^I submit feedback "([^"]*)"$/) do |feedback|
   meal_plan = MealPlan.find(@meal_plan_id)
   
-  # Initialize the actual meals if not already set
   @actual_meals_for_advance = {} unless @actual_meals_for_advance.present?
   
-  # If we have actual meals to add
   if @actual_meals_for_advance.present? && @actual_meals_for_advance.keys.any?
     advance_day_result = meal_plan.advance_day!(feedback, @actual_meals_for_advance)
   else
     advance_day_result = meal_plan.advance_day!(feedback)
   end
   
-  # Update status if meal plan is now completed
   if meal_plan.current_day >= meal_plan.duration_days
     meal_plan.update(status: "completed")
   end
@@ -343,14 +324,6 @@ Then(/^actual meals should be recorded for day (\d+)$/) do |day|
   expect(actual_meals.count).to be > 0
 end
 
-Then(/^I navigate to advance the meal plan again$/) do
-  # Meal plan is already set from previous step, just prepare for next advance
-end
-
-# Dashboard steps
-When(/^I visit the dashboard$/) do
-  visit root_path
-end
 
 When(/^I visit the dashboard with "([^"]*)" selected$/) do |user_name|
   user = User.find_by(name: user_name)
@@ -363,26 +336,8 @@ When(/^I visit the dashboard with "([^"]*)" selected and just_completed flag$/) 
   visit root_path(user_id: user.id, meal_plan_id: meal_plan.id, just_completed: true)
 end
 
-Then(/^I should see both "([^"]*)" and "([^"]*)" as selectable users$/) do |user1, user2|
-  page.should have_content(user1)
-  page.should have_content(user2)
-end
-
 Then(/^no meal plan details should be displayed$/) do
-  # This depends on the view implementation
   expect(page).not_to have_content("Detailed Meal Schedule") if page.has_content?("Detailed Meal Schedule")
-end
-
-Then(/^I should see "([^"]*)" meal plan$/) do |goal|
-  page.should have_content(goal)
-end
-
-Then(/^I should see the current day number$/) do
-  page.should have_content("Day")
-end
-
-Then(/^I should see "Meal Plan Complete"$/) do
-  page.should have_content("Complete") if page.has_content?("Complete")
 end
 
 Then(/^I should see today's meal recommendations$/) do
@@ -390,15 +345,6 @@ Then(/^I should see today's meal recommendations$/) do
   expect(has_meals).to be true
 end
 
-Then(/^I should see "([^"]*)", "([^"]*)", and "([^"]*)" options$/) do |meal1, meal2, meal3|
-  page.should have_content(meal1)
-  page.should have_content(meal2)
-  page.should have_content(meal3)
-end
-
-Then(/^no meal plan should be displayed$/) do
-  # Check that no meal plan content is shown
-end
 
 When(/^I create a "([^"]*)" meal plan for "([^"]*)" lasting (\d+) days$/) do |goal, user_name, duration|
   user = User.find_by(name: user_name)
@@ -411,7 +357,6 @@ When(/^I create a "([^"]*)" meal plan for "([^"]*)" lasting (\d+) days$/) do |go
   )
   meal_plan.save!
   
-  # Generate meal entries
   all_foods = FoodItem.all.to_a
   if all_foods.present?
     case meal_plan.goal
@@ -487,29 +432,6 @@ When(/^I create a "([^"]*)" meal plan for "([^"]*)" lasting (\d+) days$/) do |go
   end
 end
 
-# Validation and error handling steps
-When(/^I visit the new user page$/) do
-  visit new_user_path
-end
-
-When(/^I try to create a user without a name$/) do
-  page.fill_in 'user[height_cm]', with: '180'
-  page.fill_in 'user[weight_kg]', with: '75'
-  page.click_button 'Create User'
-end
-
-When(/^I try to create a user without height$/) do
-  page.fill_in 'user[name]', with: 'TestUser'
-  page.fill_in 'user[weight_kg]', with: '75'
-  page.click_button 'Create User'
-end
-
-When(/^I try to create a user without weight$/) do
-  page.fill_in 'user[name]', with: 'TestUser'
-  page.fill_in 'user[height_cm]', with: '180'
-  page.click_button 'Create User'
-end
-
 Then(/^I should see validation error for "([^"]*)"$/) do |field|
   has_error = page.has_content?("can't be blank") || page.has_content?("is required")
   expect(has_error).to be true
@@ -517,12 +439,12 @@ end
 
 When(/^I create a user with:$/) do |table|
   data = table.rows_hash
-  page.fill_in 'user[name]', with: data['name']
-  page.fill_in 'user[height_cm]', with: data['height_cm']
-  page.fill_in 'user[weight_kg]', with: data['weight_kg']
-  page.fill_in 'user[age]', with: data['age'] if data['age']
-  page.select data['sex'], from: 'user[sex]' if data['sex']
-  page.click_button 'Create User'
+  fill_in 'user[name]', with: data['name']
+  fill_in 'user[height_cm]', with: data['height_cm']
+  fill_in 'user[weight_kg]', with: data['weight_kg']
+  fill_in 'user[age]', with: data['age'] if data['age']
+  select data['sex'], from: 'user[sex]' if data['sex']
+  click_button 'Create User'
 end
 
 Then(/^I should see success message$/) do
@@ -534,23 +456,6 @@ Then(/^the user should be created in the database$/) do
   expect(User.count).to be > 0
 end
 
-When(/^I visit the create meal plan page$/) do
-  visit new_meal_plan_path
-end
-
-When(/^I visit the create meal plan page for "([^"]*)"$/) do |user_name|
-  visit new_meal_plan_path
-end
-
-When(/^I try to create a meal plan without selecting a goal$/) do
-  page.fill_in 'meal_plan[duration_days]', with: '7'
-  page.click_button 'Create Meal Plan'
-end
-
-When(/^I try to create a meal plan without setting duration$/) do
-  page.select 'Weight Loss', from: 'meal_plan[goal]'
-  page.click_button 'Create Meal Plan'
-end
 
 Then(/^I should see an error message$/) do
   has_error = page.has_content?("error") || page.has_content?("required") || page.has_content?("can't be blank")
@@ -563,8 +468,8 @@ Then(/^the replace modal is shown$/) do
 end
 
 When(/^I choose to replace the existing plan$/) do
-  page.check 'Replace Existing Plan' if page.has_field?('Replace Existing Plan')
-  page.click_button 'Create Meal Plan'
+  check 'Replace Existing Plan' if page.has_field?('Replace Existing Plan')
+  click_button 'Create Meal Plan'
 end
 
 Then(/^a new meal plan should be created$/) do
@@ -572,14 +477,12 @@ Then(/^a new meal plan should be created$/) do
 end
 
 Then(/^the old meal plan should be removed$/) do
-  # The last meal plan should be the new one
   meal_plan = MealPlan.last
   expect(meal_plan.created_at).to be_recent
 end
 
 When(/^I choose not to replace$/) do
-  # Don't check the replace checkbox
-  page.click_button 'Cancel' if page.has_button?('Cancel')
+  click_button 'Cancel' if page.has_button?('Cancel')
 end
 
 Then(/^no new meal plan should be created$/) do
@@ -593,7 +496,6 @@ Then(/^the existing meal plan should remain$/) do
   expect(user.meal_plans.count).to eq(1)
 end
 
-# Goal types and targets steps
 When(/^I view the goal targets for the meal plan$/) do
   meal_plan = MealPlan.last
   @goal_targets = meal_plan.goal_targets
@@ -607,36 +509,14 @@ Then(/^the daily target should be (\d+)$/) do |target|
   expect(@goal_targets[:target_per_day]).to eq(target.to_i)
 end
 
-Then(/^the target should include calories$/) do
-  expect(@goal_targets[:targets].keys).to include(:calories)
+Then(/^the target should include (calories|protein|carbs|fat)$/) do |nutrient|
+  expect(@goal_targets[:targets].keys).to include(nutrient.to_sym)
 end
 
-Then(/^the target should include protein$/) do
-  expect(@goal_targets[:targets].keys).to include(:protein)
-end
-
-Then(/^the target should include carbs$/) do
-  expect(@goal_targets[:targets].keys).to include(:carbs)
-end
-
-Then(/^the target should include fat$/) do
-  expect(@goal_targets[:targets].keys).to include(:fat)
-end
-
-Then(/^the daily target for calories should be (\d+)$/) do |target|
-  expect(@goal_targets[:targets][:calories][:target_per_day]).to eq(target.to_i)
-end
-
-Then(/^the daily target for protein should be (\d+)$/) do |target|
-  expect(@goal_targets[:targets][:protein][:target_per_day]).to eq(target.to_i)
-end
-
-Then(/^the daily target for carbs should be (\d+)$/) do |target|
-  expect(@goal_targets[:targets][:carbs][:target_per_day]).to eq(target.to_i)
-end
-
-Then(/^the daily target for fat should be (\d+)$/) do |target|
-  expect(@goal_targets[:targets][:fat][:target_per_day]).to eq(target.to_i)
+%w[calories protein carbs fat].each do |nutrient|
+  Then(/^the daily target for #{nutrient} should be (\d+)$/) do |target|
+    expect(@goal_targets[:targets][nutrient.to_sym][:target_per_day]).to eq(target.to_i)
+  end
 end
 
 When(/^I calculate goal progress$/) do
@@ -703,4 +583,11 @@ end
 Then(/^the dashboard should show completion status with just_completed flag$/) do
   has_completed = page.has_content?('completed') || page.has_content?('Congratulations')
   expect(has_completed).to be_truthy
+end
+
+
+Then('I should be redirected with just_completed flag') do
+  meal_plan = MealPlan.find(@meal_plan_id)
+  expect(meal_plan.status).to eq("completed")
+  expect(meal_plan.completed?).to be true
 end
