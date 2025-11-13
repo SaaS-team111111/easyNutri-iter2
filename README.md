@@ -8,7 +8,7 @@
 
 ## Here is Our Prototype!!
 
-Heroku Link: https://easynutri-group5-6c340379424a.herokuapp.com/
+Heroku Link: https://easynutri2-1337c3134520.herokuapp.com/
 
 ## Features
 
