@@ -14,6 +14,16 @@ Feature: Meal plan update with Dynamic Recommendations
     Then the meal plan should advance to day 1
     And the status should be "active"
 
+  Scenario: Advance to last day and complete the meal plan
+    Given the meal plan has 1 days completed with "strictly_followed" feedback
+    And I navigate to advance the meal plan
+    When I submit feedback "strictly_followed"
+    Then the meal plan should advance to day 2
+    And I navigate to advance the meal plan
+    When I submit feedback "strictly_followed"
+    Then the meal plan should advance to day 3
+    And the meal plan should be marked as completed
+
   Scenario: Advance day with more_healthy feedback
     Given the meal plan has 0 days completed with "strictly_followed" feedback
     And I navigate to advance the meal plan

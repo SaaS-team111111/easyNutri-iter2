@@ -23,3 +23,31 @@ Feature: User Management
     Then I should see "can't be blank"
     And I should see "Create New User"
 
+  Scenario: User edits their profile information
+    Given there is a user named "Alice" in the database
+    And I am on the dashboard page
+    When I select "Alice" from user selector
+    And I follow "Manage User"
+    Then I should see "Edit User"
+    When I fill in the following:
+      | Name         | Alice Smith  |
+      | Height (cm)  | 165          |
+      | Weight (kg)  | 55           |
+      | Age          | 28           |
+    And I select "Female" from "Sex"
+    And I press "Update User"
+    Then I should be on the dashboard page
+    And I should see "User updated successfully"
+    And I should see "Alice Smith"
+
+  Scenario: User deletes their profile
+    Given there is a user named "Bob" in the database
+    And I am on the dashboard page
+    When I select "Bob" from user selector
+    And I follow "Manage User"
+    Then I should see "Edit User"
+    When I click "Delete User" and confirm deletion
+    Then I should be on the dashboard page
+    And I should see "User deleted successfully"
+    And I should not see "Bob"
+

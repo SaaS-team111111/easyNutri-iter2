@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root "pages#dashboard"
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :edit, :update, :destroy]
 
   resources :meal_plans, only: [:new, :create, :show] do
     member do

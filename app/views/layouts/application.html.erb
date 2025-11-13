@@ -8,9 +8,35 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <style>
+      .flash-notice {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 15px;
+        margin: 20px;
+        border-radius: 4px;
+        text-align: center;
+      }
+      .flash-alert {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        margin: 20px;
+        border-radius: 4px;
+        text-align: center;
+      }
+    </style>
   </head>
 
   <body>
+    <% if notice %>
+      <div class="flash-notice"><%= notice %></div>
+    <% end %>
+    <% if alert %>
+      <div class="flash-alert"><%= alert %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

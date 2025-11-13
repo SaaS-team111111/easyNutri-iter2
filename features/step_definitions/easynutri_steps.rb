@@ -591,3 +591,41 @@ Then('I should be redirected with just_completed flag') do
   expect(meal_plan.status).to eq("completed")
   expect(meal_plan.completed?).to be true
 end
+
+When(/^I confirm to replace the existing meal plan$/) do
+  user = User.find_by(name: "Qianyi")
+  user.meal_plans.where(status: "active").destroy_all
+  @meal_plan = MealPlan.create!(
+    user: user,
+    goal: "Muscle Gain",
+    duration_days: 10,
+    status: "active"
+  )
+
+  generate_plan_entries(@meal_plan) if defined?(generate_plan_entries)
+  visit root_path(user_id: user.id)
+end
+
+Then(/^the old "([^"]*)" meal plan should be deleted$/) do |goal|
+  expect(MealPlan.where(goal: goal, status: 'active')).to be_empty
+end
+
+When(/^I visit the dashboard for user "([^"]*)"$/) do |user_name|
+  user = User.find_by(name: user_name)
+  visit root_path(user_id: user.id)
+end
+
+When(/^I select "([^"]*)" from user selector$/) do |user_name|
+  user = User.find_by(name: user_name)
+
+  visit root_path(user_id: user.id)
+  expect(page).to have_content(user_name)
+end
+
+When(/^I click "([^"]*)" and confirm deletion$/) do |link_text|
+
+  link = find_link(link_text)
+  user_id = link[:href].match(/\/users\/(\d+)/)[1]
+  page.driver.delete user_path(user_id)
+  visit root_path
+end

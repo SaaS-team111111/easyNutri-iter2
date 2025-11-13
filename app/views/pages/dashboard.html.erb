@@ -3,11 +3,14 @@
 <div class="dashboard-container">
   <div class="action-buttons">
     <%= link_to "Create User", new_user_path, class: "button button-primary" %>
+    <% if @selected_user %>
+      <%= link_to "Manage User", edit_user_path(@selected_user), class: "button button-warning" %>
+    <% end %>
     <%= link_to "Create Meal Plan", new_meal_plan_path, class: "button button-success" %>
   </div>
 
   <div class="user-selector">
-    <h2>View User's Meal Plans</h2>
+    <h2>Select a User to Get Started</h2>
     
     <% if @users.any? %>
       <%= form_with url: root_path, method: :get, local: true, class: "select-form" do |f| %>
@@ -289,6 +292,15 @@
   
   .button-success:hover {
     background-color: #218838;
+  }
+  
+  .button-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .button-warning:hover {
+    background-color: #e0a800;
   }
   
   .button-next {
