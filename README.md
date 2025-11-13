@@ -108,8 +108,11 @@ bundle exec cucumber
 ```bash
 rails db:migrate
 ```
-Our Testing result:
+Our Testing result for iter 1:
 ![](./image.png)
+
+🔥 **Our Testing result for iter 2:**
+![](./image2.png)
 
 
 ## Only if something went wrong
