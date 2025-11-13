@@ -46,7 +46,7 @@ require:
 ### Clone project
 ```bash
 git clone <repository-url>
-cd easyNutri-iter1
+cd easyNutri-iter2
 ```
 
 ### install dependencies
