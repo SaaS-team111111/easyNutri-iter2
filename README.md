@@ -9,7 +9,6 @@
 ## Here is Our Prototype!!
 
 Heroku Link: https://easynutri2-1337c3134520.herokuapp.com/
-
 ## Features
 
 ### Main Interface
