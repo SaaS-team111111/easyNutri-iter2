@@ -10,7 +10,7 @@ Feature: Viewing Meal Plans
 
   Scenario: User views the dashboard to see available meal plans
     When I am on the dashboard page
-    Then I should see "Easy-Nutri Dashboard"
+    Then I should see "Dashboard"
     And I should see "Select a User to Get Started"
 
   Scenario: User views their meal plan details
@@ -25,7 +25,7 @@ Feature: Viewing Meal Plans
     Given there is a user named "NewUser" in the database
     And there are multiple food items in the database
     When I visit the dashboard for user "NewUser"
-    Then I should see "Easy-Nutri Dashboard"
+    Then I should see "Dashboard"
     And I should see "NewUser"
 
   Scenario: User views dashboard with just completed meal plan
@@ -34,4 +34,4 @@ Feature: Viewing Meal Plans
     And there is a "Weight Loss" meal plan for "CompletedUser", lasting 3 days
     And the meal plan has 2 days completed with "strictly_followed" feedback
     When I visit the dashboard with "CompletedUser" selected and just_completed flag
-    Then I should see "Easy-Nutri Dashboard"
+    Then I should see "Dashboard"

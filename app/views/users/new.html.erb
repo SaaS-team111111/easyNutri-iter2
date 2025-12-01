@@ -1,4 +1,7 @@
-<h1>Create New User</h1>
+<div class="page-header">
+  <h1>Create New User</h1>
+  <p class="page-subtitle">Fill in the information below to create a new user profile</p>
+</div>
 
 <%= form_with model: @user, local: true do |f| %>
   <% if @user.errors.any? %>
@@ -45,8 +48,27 @@
 <%= link_to "Back to Home", root_path, class: "link-back" %>
 
 <style>
+  .page-header {
+    margin-bottom: 30px;
+  }
+  
+  .page-header h1 {
+    color: #667eea;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .page-subtitle {
+    color: #666;
+    font-size: 16px;
+  }
+  
   form {
-    max-width: 500px;
+    max-width: 600px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .field {
