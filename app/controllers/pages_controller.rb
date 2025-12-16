@@ -1,15 +1,19 @@
 class PagesController < ApplicationController
   def dashboard
-    @users = User.all
-    
-    if params[:user_id].present?
-      @selected_user = User.find_by(id: params[:user_id])
+    @users = current_account.users
+
+    return unless params[:user_id].present?
+
+    @selected_user = @users.find_by(id: params[:user_id])
+    return unless @selected_user
+
       @just_completed = params[:just_completed] == 'true'
       
+    @current_meal_plan =
       if @just_completed && params[:meal_plan_id].present?
-        @current_meal_plan = MealPlan.find_by(id: params[:meal_plan_id])
+        @selected_user.meal_plans.find_by(id: params[:meal_plan_id])
       else
-        @current_meal_plan = @selected_user&.current_meal_plan
+        @selected_user.current_meal_plan
       end
       
       if @current_meal_plan
@@ -22,7 +26,6 @@ class PagesController < ApplicationController
         @today_meals = {}
         @today_recommendations = {}
         @today_actual_meals = {}
-      end
     end
   end
 end

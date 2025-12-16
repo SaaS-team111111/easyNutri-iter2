@@ -202,9 +202,9 @@ class MealPlan < ApplicationRecord
         %w[breakfast lunch dinner].each do |meal_type|
           next unless actual_meals_data[meal_type].present?
           
-          food_id = actual_meals_data[meal_type][:food_item_id]
-          grams = actual_meals_data[meal_type][:grams]
-          
+          Array(actual_meals_data[meal_type]).each do |meal|
+            food_id = meal[:food_item_id]
+            grams = meal[:grams]
           next unless food_id.present? && grams.present?
           
           actual_meal_entries.create!(
@@ -213,6 +213,7 @@ class MealPlan < ApplicationRecord
             food_item_id: food_id,
             grams: grams
           )
+          end
         end
       end
       
@@ -308,8 +309,6 @@ class MealPlan < ApplicationRecord
   end
 
   def generate_day_meals(day, foods)
-    # Generate default single recommendation for each meal
-    # Calculate recommended grams based on goal progress
     targets = goal_targets
     consumed = actual_nutrition_consumed
     
@@ -322,42 +321,31 @@ class MealPlan < ApplicationRecord
       days_completed = consumed[:days_tracked] || 1
       avg_consumed = consumed[metric].to_f / days_completed
       
-      # If we're under/over target, adjust future recommendations
       if avg_consumed > 0
         adjustment_factor = target_per_day / avg_consumed
-        adjustment_factor = [0.7, [adjustment_factor, 1.3].min].max  # Clamp between 0.7 and 1.3
+        adjustment_factor = [0.7, [adjustment_factor, 1.3].min].max
       end
     end
     
-    # Breakfast
-    base_grams = rand(150..250)
+    meal_settings = {
+      "breakfast" => { grams_range: 150..250, min: 100, max: 400 },
+      "lunch" => { grams_range: 200..350, min: 150, max: 500 },
+      "dinner" => { grams_range: 200..300, min: 150, max: 450 }
+    }
+
+    meal_settings.each do |meal_type, config|
+      combo_count = rand(2..3)
+      combo_count.times do
+        base_grams = rand(config[:grams_range])
     recommended_grams = (base_grams * adjustment_factor).round
     meal_entries.create!(
       food_item: foods.sample,
       day_index: day,
-      meal_type: "breakfast",
-      grams: [100, [recommended_grams, 400].min].max
+          meal_type: meal_type,
+          grams: [config[:min], [recommended_grams, config[:max]].min].max
     )
-    
-    # Lunch
-    base_grams = rand(200..350)
-    recommended_grams = (base_grams * adjustment_factor).round
-    meal_entries.create!(
-      food_item: foods.sample,
-      day_index: day,
-      meal_type: "lunch",
-      grams: [150, [recommended_grams, 500].min].max
-    )
-    
-    # Dinner
-    base_grams = rand(200..300)
-    recommended_grams = (base_grams * adjustment_factor).round
-    meal_entries.create!(
-      food_item: foods.sample,
-      day_index: day,
-      meal_type: "dinner",
-      grams: [150, [recommended_grams, 450].min].max
-    )
+      end
+    end
   end
 
   def generate_day_recommendations(day, foods)
@@ -383,40 +371,23 @@ class MealPlan < ApplicationRecord
       end
     end
     
-    # Generate multiple recommendations for breakfast
-    foods.sample(4).each do |food|
-      base_grams = rand(150..250)
+    meal_settings = {
+      "breakfast" => { sample: 3, range: 150..250, min: 100, max: 400 },
+      "lunch" => { sample: 3, range: 200..350, min: 150, max: 500 },
+      "dinner" => { sample: 3, range: 200..300, min: 150, max: 450 }
+    }
+
+    meal_settings.each do |meal_type, config|
+      foods.sample(config[:sample]).each do |food|
+        base_grams = rand(config[:range])
       recommended_grams = (base_grams * adjustment_factor).round
       meal_recommendations.create!(
         food_item: food,
         day_index: day,
-        meal_type: "breakfast",
-        recommended_grams: [100, [recommended_grams, 400].min].max
+          meal_type: meal_type,
+          recommended_grams: [config[:min], [recommended_grams, config[:max]].min].max
       )
-    end
-    
-    # Generate multiple recommendations for lunch
-    foods.sample(4).each do |food|
-      base_grams = rand(200..350)
-      recommended_grams = (base_grams * adjustment_factor).round
-      meal_recommendations.create!(
-        food_item: food,
-        day_index: day,
-        meal_type: "lunch",
-        recommended_grams: [150, [recommended_grams, 500].min].max
-      )
-    end
-    
-    # Generate multiple recommendations for dinner
-    foods.sample(4).each do |food|
-      base_grams = rand(200..300)
-      recommended_grams = (base_grams * adjustment_factor).round
-      meal_recommendations.create!(
-        food_item: food,
-        day_index: day,
-        meal_type: "dinner",
-        recommended_grams: [150, [recommended_grams, 450].min].max
-      )
+      end
     end
   end
 end

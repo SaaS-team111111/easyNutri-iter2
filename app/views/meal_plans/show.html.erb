@@ -100,7 +100,7 @@
             <% @actual_meals_by_day[day_index].each do |actual_entry| %>
               <% multiplier = actual_entry.grams / 100.0 %>
               <tr class="actual-meal-row">
-                <td class="meal-type">
+                <td class="meal-type meal-<%= actual_entry.meal_type %>">
                   <%= actual_entry.meal_type.capitalize %>
                 </td>
                 <td><%= actual_entry.food_item.name %></td>
@@ -157,7 +157,7 @@
           <% entries.each do |entry| %>
             <% multiplier = entry.grams / 100.0 %>
             <tr>
-              <td class="meal-type">
+              <td class="meal-type meal-<%= entry.meal_type %>">
                 <%= entry.meal_type.capitalize %>
               </td>
               <td><%= entry.food_item.name %></td>
@@ -414,7 +414,18 @@
   
   .meal-type {
     font-weight: bold;
-    color: #28a745;
+  }
+  
+  .meal-breakfast {
+    color: #f39c12;  /* Orange/Gold - morning sun */
+  }
+  
+  .meal-lunch {
+    color: #27ae60;  /* Green - midday energy */
+  }
+  
+  .meal-dinner {
+    color: #8e44ad;  /* Purple - evening */
   }
   
   .day-summary {

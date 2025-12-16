@@ -64,6 +64,20 @@
         gap: 12px;
         align-items: center;
       }
+
+      .account-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: #ecf0f1;
+        font-weight: 500;
+      }
+
+      .account-name {
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+      }
       
       .nav-link {
         text-decoration: none;
@@ -79,6 +93,70 @@
       .nav-link:hover {
         background: #f8f9fa;
         transform: translateY(-1px);
+      }
+
+      .nav-link.secondary {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .nav-link.secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Auth Pages */
+      .auth-container {
+        max-width: 480px;
+        margin: 60px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      }
+
+      .auth-container h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #2c3e50;
+        text-align: center;
+      }
+
+      .auth-form .field {
+        margin-bottom: 15px;
+      }
+
+      .auth-form label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .auth-form input[type="text"],
+      .auth-form input[type="password"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 15px;
+      }
+
+      .auth-form input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+      }
+
+      .auth-form .actions {
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      .auth-switch {
+        margin-top: 16px;
+        text-align: center;
+        color: #555;
       }
       
       /* Main Content */
@@ -147,9 +225,18 @@
         <% end %>
         
         <nav class="header-nav">
-          <%= link_to "Home", root_path, class: "nav-link" %>
-          <%= link_to "New User", new_user_path, class: "nav-link" %>
-          <%= link_to "New Plan", new_meal_plan_path, class: "nav-link" %>
+          <% if logged_in? %>
+            <%= link_to "Home", root_path, class: "nav-link" %>
+            <%= link_to "New User", new_user_path, class: "nav-link" %>
+            <%= link_to "New Plan", new_meal_plan_path, class: "nav-link" %>
+            <div class="account-info">
+              <span class="account-name">👤 <%= current_account.username %></span>
+              <%= link_to "Sign out", logout_path, data: { turbo_method: :delete }, class: "nav-link secondary" %>
+            </div>
+          <% else %>
+            <%= link_to "Sign in", login_path, class: "nav-link" %>
+            <%= link_to "Sign up", new_account_path, class: "nav-link secondary" %>
+          <% end %>
         </nav>
       </div>
     </header>
@@ -164,7 +251,7 @@
     
     <!-- Main Content -->
     <main class="main-content">
-      <%= yield %>
+    <%= yield %>
     </main>
   </body>
 </html>

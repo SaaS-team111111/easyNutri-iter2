@@ -96,8 +96,17 @@ bundle exec rails s -b 0.0.0.0
 
 ### Run rspec and cucumber tests
 
-**Important:** Make sure database is set up first (see Setup database section above)
+**Important:** Set up test database first:
 
+```bash
+# Create and migrate test database
+rails db:create RAILS_ENV=test
+rails db:migrate RAILS_ENV=test
+# Or use the shortcut:
+rails db:test:prepare
+```
+
+Then run tests:
 ```bash
 bundle exec rspec
 bundle exec cucumber
@@ -105,7 +114,15 @@ bundle exec cucumber
 
 **If you get "Migrations are pending" error:**
 ```bash
-rails db:migrate
+rails db:migrate RAILS_ENV=test
+```
+
+**If you get database connection errors:**
+```bash
+# Recreate test database from scratch
+rails db:drop RAILS_ENV=test
+rails db:create RAILS_ENV=test
+rails db:migrate RAILS_ENV=test
 ```
 <!-- Our Testing result for iter 1:
 ![](./image.png) -->

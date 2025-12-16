@@ -1,5 +1,10 @@
+def test_account
+  @test_account ||= Account.find_by(username: "cucumber_test") || Account.first
+end
+
 Given(/^there is a user named "([^"]*)" in the database$/) do |name|
   User.create!(
+    account: test_account,
     name: name,
     height_cm: 170,
     weight_kg: 60,
@@ -39,7 +44,12 @@ Given(/^there are multiple food items in the database$/) do
 end
 
 Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |goal, user_name, duration|
-  user = User.find_by(name: user_name)
+  user = User.find_or_create_by!(name: user_name, account: test_account) do |u|
+    u.height_cm = 170
+    u.weight_kg = 60
+    u.age = 25
+    u.sex = 'M'
+  end
   raise "User #{user_name} not found" unless user
   
   meal_plan = MealPlan.new(
@@ -128,7 +138,7 @@ Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |
 end
 
 When(/^I view the meal plan for "([^"]*)"$/) do |user_name|
-  user = User.find_by(name: user_name)
+  user = User.find_by(name: user_name, account: test_account)
   meal_plan = user.meal_plans.last
   visit meal_plan_path(meal_plan)
 end
@@ -310,7 +320,8 @@ Given(/^I navigate to advance the meal plan with actual meals for day (\d+):$/) 
     raise "Food #{row['Food']} not found" unless food
     
     meal_type = row['Meal Type'].downcase
-    @actual_meals_for_advance[meal_type] = {
+    @actual_meals_for_advance[meal_type] ||= []
+    @actual_meals_for_advance[meal_type] << {
       food_item_id: food.id,
       grams: row['Grams'].to_i
     }
@@ -326,18 +337,18 @@ end
 
 
 When(/^I visit the dashboard with "([^"]*)" selected$/) do |user_name|
-  user = User.find_by(name: user_name)
+  user = User.find_by(name: user_name, account: test_account)
   visit root_path(user_id: user.id)
 end
 
 When(/^I visit the dashboard with "([^"]*)" selected and just_completed flag$/) do |user_name|
-  user = User.find_by(name: user_name)
+  user = User.find_by(name: user_name, account: test_account)
   meal_plan = user.meal_plans.last
   visit root_path(user_id: user.id, meal_plan_id: meal_plan.id, just_completed: true)
 end
 
 Then(/^no meal plan details should be displayed$/) do
-  expect(page).not_to have_content("Detailed Meal Schedule") if page.has_content?("Detailed Meal Schedule")
+  expect(page).not_to have_content("Detailed Meal Schedule")
 end
 
 Then(/^I should see today's meal recommendations$/) do
@@ -347,7 +358,7 @@ end
 
 
 When(/^I create a "([^"]*)" meal plan for "([^"]*)" lasting (\d+) days$/) do |goal, user_name, duration|
-  user = User.find_by(name: user_name)
+  user = User.find_by(name: user_name, account: test_account)
   meal_plan = MealPlan.new(
     user: user,
     goal: goal,
@@ -573,7 +584,10 @@ Then(/^days tracked should be (\d+)$/) do |days|
 end
 
 Then(/^I should see the replace existing meal plan modal$/) do
-  expect(page).to have_content('Replace') if page.has_css?('[data-modal="replace-plan"]')
+  expect(page).to have_css('#replaceModal')
+  within('#replaceModal') do
+    expect(page).to have_content('Active Meal Plan Exists')
+  end
 end
 
 Then(/^the old weight loss plan should be deleted$/) do

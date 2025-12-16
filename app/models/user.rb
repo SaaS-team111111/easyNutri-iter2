@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  belongs_to :account
   has_many :meal_plans, dependent: :destroy
 
   validates :name, presence: true

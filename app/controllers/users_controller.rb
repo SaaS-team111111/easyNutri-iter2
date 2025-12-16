@@ -2,11 +2,11 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def new
-    @user = User.new
+    @user = current_account.users.new
   end
 
   def create
-    @user = User.new(user_params)
+    @user = current_account.users.new(user_params)
     if @user.save
       redirect_to root_path, notice: "User created successfully!"
     else
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = User.find(params[:id])
+    @user = current_account.users.find(params[:id])
   end
 
   def user_params

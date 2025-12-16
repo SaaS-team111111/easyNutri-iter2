@@ -1,55 +1,60 @@
 class MealPlansController < ApplicationController
   def new
     @meal_plan = MealPlan.new
-    @users = User.all
+    @users = current_account.users
     @show_replace_modal = false
   end
 
   def create
-    @meal_plan = MealPlan.new(meal_plan_params)
-    @meal_plan.status = "active"
-    @meal_plan.current_day = 0
-    
-    # Validate meal plan first to catch missing user_id
-    unless @meal_plan.valid?
-      @users = User.all
-      render :new
+    user = current_account.users.find_by(id: meal_plan_params[:user_id])
+    unless user
+      redirect_to root_path, alert: "Unauthorized user"
       return
     end
-    
-    user = @meal_plan.user
+
     
     if params[:replace_existing] == 'true'
       user.meal_plans.where(status: "active").destroy_all
     elsif user.has_active_meal_plan?
-      @users = User.all
+      @meal_plan = user.meal_plans.new(meal_plan_params.except(:user_id))
+      @users = current_account.users
       @show_replace_modal = true
       render :new
       return
     end
 
+    @meal_plan = user.meal_plans.new(meal_plan_params.except(:user_id))
+    @meal_plan.status = "active"
+    @meal_plan.current_day = 0
+
     if @meal_plan.save
       generate_plan_entries(@meal_plan)
       redirect_to root_path(user_id: @meal_plan.user_id), notice: "Meal plan created successfully!"
     else
-      @users = User.all
+      @users = current_account.users
       render :new
     end
   end
   
   def advance_day
-    @meal_plan = MealPlan.find(params[:id])
+    @meal_plan = current_account.meal_plans.find(params[:id])
     feedback = params[:feedback]
     
     # Extract actual meals data from params if user used "Eat What I Want"
     actual_meals_data = {}
-    %w[breakfast lunch dinner].each do |meal_type|
-      if params.dig(:actual_meals, meal_type, :food_item_id).present?
-        actual_meals_data[meal_type] = {
-          food_item_id: params[:actual_meals][meal_type][:food_item_id],
-          grams: params[:actual_meals][meal_type][:grams]
+    params[:actual_meals]&.each do |meal_type, items|
+      next unless items.is_a?(Array)
+
+      meals = items.filter_map do |item|
+        next unless item[:food_item_id].present? && item[:grams].present?
+
+        {
+          food_item_id: item[:food_item_id],
+          grams: item[:grams]
         }
       end
+
+      actual_meals_data[meal_type] = meals if meals.any?
     end
     
     if @meal_plan.advance_day!(feedback, actual_meals_data)
@@ -65,14 +70,15 @@ class MealPlansController < ApplicationController
   end
 
   def show
-    @meal_plan = MealPlan.find(params[:id])
+    @meal_plan = current_account.meal_plans.find(params[:id])
+    meal_order = "CASE meal_type WHEN 'breakfast' THEN 1 WHEN 'lunch' THEN 2 WHEN 'dinner' THEN 3 END"
     @entries_by_day = @meal_plan.meal_entries
       .includes(:food_item)
-      .order(:day_index, :meal_type)
+      .order(Arel.sql("day_index, #{meal_order}"))
       .group_by(&:day_index)
     @actual_meals_by_day = @meal_plan.actual_meal_entries
       .includes(:food_item)
-      .order(:day_index, :meal_type)
+      .order(Arel.sql("day_index, #{meal_order}"))
       .group_by(&:day_index)
     
     # Calculate progress data
@@ -108,62 +114,37 @@ class MealPlansController < ApplicationController
     
     foods = all_foods.take(5) if foods.size < 5
     
-    # Generate both meal entries (default recommendations) and meal recommendations (options)
+    
     (0...meal_plan.duration_days).each do |day|
-      # Generate default meal entries (for simple view)
-      MealEntry.create!(
-        meal_plan: meal_plan,
-        food_item: foods.sample,
-        day_index: day,
-        meal_type: "breakfast",
-        grams: rand(150..250)
-      )
+      meal_settings = {
+        "breakfast" => { range: 150..250 },
+        "lunch" => { range: 200..350 },
+        "dinner" => { range: 200..300 }
+      }
+
       
-      MealEntry.create!(
-        meal_plan: meal_plan,
-        food_item: foods.sample,
-        day_index: day,
-        meal_type: "lunch",
-        grams: rand(200..350)
-      )
-      
-      MealEntry.create!(
-        meal_plan: meal_plan,
-        food_item: foods.sample,
-        day_index: day,
-        meal_type: "dinner",
-        grams: rand(200..300)
-      )
-      
-      # Generate meal recommendations (multiple options for "Eat What I Want")
-      # 4 options for breakfast
-      foods.sample(4).each do |food|
-        meal_plan.meal_recommendations.create!(
-          food_item: food,
-          day_index: day,
-          meal_type: "breakfast",
-          recommended_grams: rand(150..250)
-        )
+      meal_settings.each do |meal_type, config|
+        rand(2..3).times do
+          MealEntry.create!(
+            meal_plan: meal_plan,
+            food_item: foods.sample,
+            day_index: day,
+            meal_type: meal_type,
+            grams: rand(config[:range])
+          )
+        end
       end
       
-      # 4 options for lunch
-      foods.sample(4).each do |food|
-        meal_plan.meal_recommendations.create!(
-          food_item: food,
-          day_index: day,
-          meal_type: "lunch",
-          recommended_grams: rand(200..350)
-        )
-      end
       
-      # 4 options for dinner
-      foods.sample(4).each do |food|
-        meal_plan.meal_recommendations.create!(
-          food_item: food,
-          day_index: day,
-          meal_type: "dinner",
-          recommended_grams: rand(200..300)
-        )
+      meal_settings.each do |meal_type, config|
+        foods.sample(3).each do |food|
+          meal_plan.meal_recommendations.create!(
+            food_item: food,
+            day_index: day,
+            meal_type: meal_type,
+            recommended_grams: rand(config[:range])
+          )
+        end
       end
     end
   end

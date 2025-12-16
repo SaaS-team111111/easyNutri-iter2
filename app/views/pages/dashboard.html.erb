@@ -96,7 +96,7 @@
                           <% if @today_meals[meal_type].present? %>
                             <% @today_meals[meal_type].each do |entry| %>
                               <tr>
-                                <td class="meal-type"><%= meal_type.titleize %></td>
+                                <td class="meal-type meal-<%= meal_type %>"><%= meal_type.titleize %></td>
                                 <td><%= entry.food_item.name %></td>
                                 <td><%= entry.grams %>g</td>
                                 <td><%= ((entry.food_item.calories_per_100g * entry.grams) / 100.0).round %></td>
@@ -122,63 +122,58 @@
                         <% %w[breakfast lunch dinner].each do |meal_type| %>
                           <% if @today_recommendations[meal_type].present? %>
                             <div class="meal-card">
-                              <h4 class="meal-card-title"><%= meal_type.titleize %></h4>
+                              <h4 class="meal-card-title meal-title-<%= meal_type %>"><%= meal_type.titleize %></h4>
                               
                               <div class="meal-selector">
-                                <label>Choose your food:</label>
-                                <select class="food-select" data-meal-type="<%= meal_type %>" onchange="updateNutrition('<%= meal_type %>')">
-                                  <% @today_recommendations[meal_type].each_with_index do |rec, index| %>
-                                    <option 
-                                      value="<%= rec.food_item.id %>" 
-                                      data-calories="<%= rec.food_item.calories_per_100g %>"
-                                      data-protein="<%= rec.food_item.protein_per_100g %>"
-                                      data-carbs="<%= rec.food_item.carbs_per_100g %>"
-                                      data-fat="<%= rec.food_item.fat_per_100g %>"
-                                      data-recommended-grams="<%= rec.recommended_grams %>"
-                                      <%= 'selected' if index == 0 %>>
-                                      <%= rec.food_item.name %>
-                                    </option>
+                                <label>Pick 2-3 ingredients:</label>
+                                <div class="combo-list">
+                                  <% @today_recommendations[meal_type].first(3).each_with_index do |rec, idx| %>
+                                    <div class="combo-item" data-meal-type="<%= meal_type %>">
+                                      <label class="combo-row">
+                                        <input type="checkbox" class="combo-check" data-meal-type="<%= meal_type %>" data-index="<%= idx %>"
+                                          data-food-id="<%= rec.food_item.id %>"
+                                          data-calories="<%= rec.food_item.calories_per_100g %>"
+                                          data-protein="<%= rec.food_item.protein_per_100g %>"
+                                          data-carbs="<%= rec.food_item.carbs_per_100g %>"
+                                          data-fat="<%= rec.food_item.fat_per_100g %>"
+                                          checked>
+                                        <span class="combo-name"><%= rec.food_item.name %></span>
+                                      </label>
+                                      <div class="amount-controls inline">
+                                        <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', <%= idx %>, -10)">-10g</button>
+                                        <input 
+                                          type="number" 
+                                          class="amount-input" 
+                                          data-meal-type="<%= meal_type %>"
+                                          data-index="<%= idx %>"
+                                          value="<%= rec.recommended_grams %>" 
+                                          min="50" 
+                                          max="1000" 
+                                          step="10"
+                                          onchange="updateNutrition('<%= meal_type %>')">
+                                        <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', <%= idx %>, 10)">+10g</button>
+                                      </div>
+                                    </div>
                                   <% end %>
-                                </select>
-                              </div>
-                              
-                              <div class="amount-selector">
-                                <label>Amount (grams):</label>
-                                <div class="amount-controls">
-                                  <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', -50)">-50g</button>
-                                  <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', -10)">-10g</button>
-                                  <input 
-                                    type="number" 
-                                    class="amount-input" 
-                                    data-meal-type="<%= meal_type %>"
-                                    value="<%= @today_recommendations[meal_type].first.recommended_grams %>" 
-                                    min="50" 
-                                    max="1000" 
-                                    step="10"
-                                    onchange="updateNutrition('<%= meal_type %>')">
-                                  <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', 10)">+10g</button>
-                                  <button type="button" class="amount-btn" onclick="adjustAmount('<%= meal_type %>', 50)">+50g</button>
                                 </div>
                               </div>
-                              
+
                               <div class="nutrition-display" id="nutrition-<%= meal_type %>">
-                                <% rec = @today_recommendations[meal_type].first %>
-                                <% grams = rec.recommended_grams %>
                                 <div class="nutrition-item">
                                   <span class="nutrition-label">Calories:</span>
-                                  <span class="nutrition-value"><%= ((rec.food_item.calories_per_100g * grams) / 100.0).round %></span>
+                                  <span class="nutrition-value">0</span>
                                 </div>
                                 <div class="nutrition-item">
                                   <span class="nutrition-label">Protein:</span>
-                                  <span class="nutrition-value"><%= ((rec.food_item.protein_per_100g * grams) / 100.0).round(1) %>g</span>
+                                  <span class="nutrition-value">0g</span>
                                 </div>
                                 <div class="nutrition-item">
                                   <span class="nutrition-label">Carbs:</span>
-                                  <span class="nutrition-value"><%= ((rec.food_item.carbs_per_100g * grams) / 100.0).round(1) %>g</span>
+                                  <span class="nutrition-value">0g</span>
                                 </div>
                                 <div class="nutrition-item">
                                   <span class="nutrition-label">Fat:</span>
-                                  <span class="nutrition-value"><%= ((rec.food_item.fat_per_100g * grams) / 100.0).round(1) %>g</span>
+                                  <span class="nutrition-value">0g</span>
                                 </div>
                               </div>
                             </div>
@@ -216,11 +211,8 @@
       <p>Your feedback helps us optimize future recommendations.</p>
       
       <%= form_with url: advance_day_meal_plan_path(@current_meal_plan), method: :post, local: true, id: "feedbackForm", class: "feedback-form" do |f| %>
-        <!-- Hidden fields to store actual meal selections (only used if "Eat What I Want" mode was used) -->
-        <% %w[breakfast lunch dinner].each do |meal_type| %>
-          <input type="hidden" name="actual_meals[<%= meal_type %>][food_item_id]" id="actual_food_<%= meal_type %>">
-          <input type="hidden" name="actual_meals[<%= meal_type %>][grams]" id="actual_grams_<%= meal_type %>">
-        <% end %>
+        <!-- Hidden container for dynamic actual meal selections -->
+        <div id="actual_inputs_container"></div>
         
         <div class="feedback-options">
           <button type="submit" name="feedback" value="strictly_followed" class="feedback-button">
@@ -444,7 +436,36 @@
 
   .meal-type {
     font-weight: 600;
-    color: #28a745;
+  }
+
+  .meal-breakfast {
+    color: #f39c12;  /* Orange/Gold - morning sun */
+  }
+
+  .meal-lunch {
+    color: #27ae60;  /* Green - midday energy */
+  }
+
+  .meal-dinner {
+    color: #8e44ad;  /* Purple - evening */
+  }
+
+  .meal-title-breakfast {
+    color: #f39c12;
+    border-left: 4px solid #f39c12;
+    padding-left: 10px;
+  }
+
+  .meal-title-lunch {
+    color: #27ae60;
+    border-left: 4px solid #27ae60;
+    padding-left: 10px;
+  }
+
+  .meal-title-dinner {
+    color: #8e44ad;
+    border-left: 4px solid #8e44ad;
+    padding-left: 10px;
   }
 
   .next-day-button {
@@ -644,6 +665,32 @@
     border-bottom: 2px solid #e9ecef;
   }
 
+  .combo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .combo-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fafafa;
+  }
+
+  .combo-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .combo-name {
+    flex: 1;
+  }
+
   .meal-selector,
   .amount-selector {
     margin-bottom: 15px;
@@ -680,6 +727,10 @@
     gap: 8px;
     align-items: center;
     justify-content: center;
+  }
+
+  .amount-controls.inline {
+    justify-content: flex-start;
   }
 
   .amount-btn {
@@ -807,53 +858,89 @@
     }
   }
   
-  // Update nutrition display when food or amount changes
+  // Update nutrition display when food or amount changes (supports multiple selections)
   function updateNutrition(mealType) {
-    const select = document.querySelector(`.food-select[data-meal-type="${mealType}"]`);
-    const input = document.querySelector(`.amount-input[data-meal-type="${mealType}"]`);
     const nutritionDiv = document.getElementById(`nutrition-${mealType}`);
-    
-    if (!select || !input || !nutritionDiv) return;
-    
-    const selectedOption = select.options[select.selectedIndex];
-    const calories = parseFloat(selectedOption.dataset.calories);
-    const protein = parseFloat(selectedOption.dataset.protein);
-    const carbs = parseFloat(selectedOption.dataset.carbs);
-    const fat = parseFloat(selectedOption.dataset.fat);
-    const grams = parseFloat(input.value);
-    
-    const multiplier = grams / 100.0;
-    
+    if (!nutritionDiv) return;
+
+    let calories = 0;
+    let protein = 0;
+    let carbs = 0;
+    let fat = 0;
+
+    const items = document.querySelectorAll(`.combo-item[data-meal-type="${mealType}"]`);
+    items.forEach((item) => {
+      const checkbox = item.querySelector('.combo-check');
+      const input = item.querySelector('.amount-input');
+      if (!checkbox || !input || !checkbox.checked) return;
+
+      const grams = parseFloat(input.value);
+      const multiplier = grams / 100.0;
+
+      calories += parseFloat(checkbox.dataset.calories) * multiplier;
+      protein += parseFloat(checkbox.dataset.protein) * multiplier;
+      carbs += parseFloat(checkbox.dataset.carbs) * multiplier;
+      fat += parseFloat(checkbox.dataset.fat) * multiplier;
+    });
+
     nutritionDiv.innerHTML = `
       <div class="nutrition-item">
         <span class="nutrition-label">Calories:</span>
-        <span class="nutrition-value">${Math.round(calories * multiplier)}</span>
+        <span class="nutrition-value">${Math.round(calories)}</span>
       </div>
       <div class="nutrition-item">
         <span class="nutrition-label">Protein:</span>
-        <span class="nutrition-value">${(protein * multiplier).toFixed(1)}g</span>
+        <span class="nutrition-value">${protein.toFixed(1)}g</span>
       </div>
       <div class="nutrition-item">
         <span class="nutrition-label">Carbs:</span>
-        <span class="nutrition-value">${(carbs * multiplier).toFixed(1)}g</span>
+        <span class="nutrition-value">${carbs.toFixed(1)}g</span>
       </div>
       <div class="nutrition-item">
         <span class="nutrition-label">Fat:</span>
-        <span class="nutrition-value">${(fat * multiplier).toFixed(1)}g</span>
+        <span class="nutrition-value">${fat.toFixed(1)}g</span>
       </div>
     `;
   }
   
-  // Adjust amount with buttons
-  function adjustAmount(mealType, delta) {
-    const input = document.querySelector(`.amount-input[data-meal-type="${mealType}"]`);
+  // Adjust amount with buttons (per item)
+  function adjustAmount(mealType, index, delta) {
+    const input = document.querySelector(`.amount-input[data-meal-type="${mealType}"][data-index="${index}"]`);
     if (!input) return;
-    
+
     let newValue = parseInt(input.value) + delta;
     newValue = Math.max(50, Math.min(1000, newValue));
     input.value = newValue;
-    
+
     updateNutrition(mealType);
+  }
+
+  // Collect selected foods into hidden inputs before submitting feedback
+  function collectActualMeals() {
+    const container = document.getElementById('actual_inputs_container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    ['breakfast', 'lunch', 'dinner'].forEach((mealType) => {
+      const items = document.querySelectorAll(`.combo-item[data-meal-type="${mealType}"]`);
+      let idx = 0;
+
+      items.forEach((item) => {
+        const checkbox = item.querySelector('.combo-check');
+        const input = item.querySelector('.amount-input');
+        if (!checkbox || !input || !checkbox.checked) return;
+
+        const foodId = checkbox.dataset.foodId;
+        const grams = input.value;
+
+        container.insertAdjacentHTML('beforeend', `
+          <input type="hidden" class="dynamic-actual-input" name="actual_meals[${mealType}][${idx}][food_item_id]" value="${foodId}">
+          <input type="hidden" class="dynamic-actual-input" name="actual_meals[${mealType}][${idx}][grams]" value="${grams}">
+        `);
+        idx += 1;
+      });
+    });
   }
   
   function handleNextDay() {
@@ -863,15 +950,7 @@
       
       // If in custom mode, capture user selections
       if (isCustomMode) {
-        ['breakfast', 'lunch', 'dinner'].forEach(mealType => {
-          const select = document.querySelector(`.food-select[data-meal-type="${mealType}"]`);
-          const input = document.querySelector(`.amount-input[data-meal-type="${mealType}"]`);
-          
-          if (select && input) {
-            document.getElementById(`actual_food_${mealType}`).value = select.value;
-            document.getElementById(`actual_grams_${mealType}`).value = input.value;
-          }
-        });
+        collectActualMeals();
       }
       
       if (currentDay === totalDays) {
@@ -945,4 +1024,11 @@
       }
     });
   <% end %>
+
+  // Initialize nutrition displays on load for custom view
+  window.addEventListener('DOMContentLoaded', function() {
+    ['breakfast', 'lunch', 'dinner'].forEach((mealType) => {
+      updateNutrition(mealType);
+    });
+  });
 </script>

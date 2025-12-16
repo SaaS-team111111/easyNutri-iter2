@@ -1,0 +1,30 @@
+<div class="auth-container">
+  <h1>Create Account</h1>
+
+  <%= form_with model: @account, url: accounts_path, local: true, class: "auth-form" do |f| %>
+    <div class="field">
+      <%= f.label :username, "Username" %>
+      <%= f.text_field :username, required: true, autofocus: true %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password, "Password" %>
+      <%= f.password_field :password, required: true %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation, "Confirm Password" %>
+      <%= f.password_field :password_confirmation, required: true %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Sign Up", class: "button button-primary" %>
+    </div>
+  <% end %>
+
+  <p class="auth-switch">
+    Already have an account?
+    <%= link_to "Sign in", login_path %>
+  </p>
+</div>
+

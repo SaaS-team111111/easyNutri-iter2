@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
+  let(:account) { create(:account) }
+  
   before do
     routes.draw do
       root 'pages#dashboard'
-      resources :users, only: [:new, :create]
+      get '/login', to: 'sessions#new', as: :login
+      resources :users, only: [:new, :create, :edit, :update, :destroy]
     end
+    login_account(account)
   end
 
   describe 'GET #new' do
