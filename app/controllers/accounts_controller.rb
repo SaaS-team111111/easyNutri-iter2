@@ -11,7 +11,7 @@ class AccountsController < ApplicationController
       session[:account_id] = @account.id
       redirect_to root_path, notice: "Account created successfully"
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

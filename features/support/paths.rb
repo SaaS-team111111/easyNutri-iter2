@@ -14,6 +14,15 @@ module NavigationHelpers
     when /^the new meal plan page$/
       new_meal_plan_path
 
+    when /^the new account page$/
+      new_account_path
+
+    when /^the login page$/
+      login_path
+
+    when /^logout$/
+      logout_path
+
     else
       begin
         page_name =~ /^the (.*) page$/

@@ -47,6 +47,26 @@ RSpec.describe MealPlansController, type: :controller do
       post :create, params: { meal_plan: { user_id: user.id, goal: 'Low Sodium', duration_days: 5 }, replace_existing: 'true' }
       expect(response).to have_http_status(:found)
     end
+
+    it 'redirects with alert when user is not authorized (user from different account)' do
+      other_account = create(:account)
+      other_user = create(:user, account: other_account)
+      
+      post :create, params: { meal_plan: { user_id: other_user.id, goal: 'Weight Loss', duration_days: 7 } }
+      
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("Unauthorized user")
+    end
+
+    it 'renders :new when meal plan save fails' do
+      allow_any_instance_of(MealPlan).to receive(:save).and_return(false)
+      allow_any_instance_of(MealPlan).to receive(:errors).and_return(double(full_messages: ['Error message']))
+      
+      post :create, params: { meal_plan: { user_id: user.id, goal: 'Weight Loss', duration_days: 7 } }
+      
+      expect(response).to render_template(:new)
+      expect(assigns(:users)).to be_present
+    end
   end
 
   describe 'GET #show' do
@@ -82,6 +102,33 @@ RSpec.describe MealPlansController, type: :controller do
       post :advance_day, params: { id: plan.id, feedback: 'strictly_followed' }
       expect(plan.reload.status).to eq('completed')
       expect(response.location).to include('just_completed=true')
+    end
+
+    it 'redirects with alert when meal plan is already completed' do
+      plan.update(status: 'completed', current_day: 3)
+      allow_any_instance_of(MealPlan).to receive(:advance_day!).and_return(false)
+      
+      post :advance_day, params: { id: plan.id, feedback: 'strictly_followed' }
+      
+      expect(response).to redirect_to(root_path(user_id: plan.user_id))
+      expect(flash[:alert]).to eq("Meal plan is already completed!")
+    end
+
+    it 'handles advance_day with array of actual meals for different meal types' do
+      food1 = create(:food_item)
+      food2 = create(:food_item)
+      post :advance_day, params: { 
+        id: plan.id, 
+        feedback: 'strictly_followed',
+        actual_meals: { 
+          breakfast: [{ food_item_id: food1.id, grams: 200 }],
+          lunch: [{ food_item_id: food2.id, grams: 300 }]
+        }
+      }
+      
+      expect(plan.reload.current_day).to eq(1)
+      expect(plan.actual_meal_entries.where(meal_type: 'breakfast').count).to eq(1)
+      expect(plan.actual_meal_entries.where(meal_type: 'lunch').count).to eq(1)
     end
   end
 end

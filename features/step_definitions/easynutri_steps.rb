@@ -3,8 +3,22 @@ def test_account
 end
 
 Given(/^there is a user named "([^"]*)" in the database$/) do |name|
+  account = test_account
   User.create!(
-    account: test_account,
+    account: account,
+    name: name,
+    height_cm: 170,
+    weight_kg: 60,
+    age: 25,
+    sex: 'M'
+  )
+end
+
+Given(/^there is a user named "([^"]*)" for account "([^"]*)" in the database$/) do |name, username|
+  account = Account.find_by(username: username)
+  raise "Account #{username} not found" unless account
+  User.create!(
+    account: account,
     name: name,
     height_cm: 170,
     weight_kg: 60,
@@ -43,7 +57,7 @@ Given(/^there are multiple food items in the database$/) do
   end
 end
 
-Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days$/) do |goal, user_name, duration|
+Given(/^there is a "([^"]*)" meal plan for "([^"]*)", lasting (\d+) days?$/) do |goal, user_name, duration|
   user = User.find_or_create_by!(name: user_name, account: test_account) do |u|
     u.height_cm = 170
     u.weight_kg = 60
@@ -642,4 +656,30 @@ When(/^I click "([^"]*)" and confirm deletion$/) do |link_text|
   user_id = link[:href].match(/\/users\/(\d+)/)[1]
   page.driver.delete user_path(user_id)
   visit root_path
+end
+
+Given(/^there is an account with username "([^"]*)" and password "([^"]*)"$/) do |username, password|
+  Account.create!(
+    username: username,
+    password: password,
+    password_confirmation: password
+  )
+end
+
+Given(/^I am logged out$/) do
+  page.driver.delete "/logout"
+  visit login_path
+end
+
+Given(/^I am logged in as "([^"]*)" with password "([^"]*)"$/) do |username, password|
+  account = Account.find_by(username: username) || Account.create!(
+    username: username,
+    password: password,
+    password_confirmation: password
+  )
+  visit login_path
+  fill_in "Username", with: username
+  fill_in "Password", with: password
+  click_button "Sign In"
+  expect(page).to have_content("Signed in successfully") unless page.has_content?("Dashboard")
 end

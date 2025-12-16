@@ -2,6 +2,17 @@
   <h1>Create Account</h1>
 
   <%= form_with model: @account, url: accounts_path, local: true, class: "auth-form" do |f| %>
+    <% if @account.errors.any? %>
+      <div class="errors">
+        <h3><%= pluralize(@account.errors.count, "error") %> prevented this account from being saved:</h3>
+        <ul>
+          <% @account.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
     <div class="field">
       <%= f.label :username, "Username" %>
       <%= f.text_field :username, required: true, autofocus: true %>

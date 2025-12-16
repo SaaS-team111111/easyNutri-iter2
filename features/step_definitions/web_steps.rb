@@ -2,7 +2,14 @@ require 'uri'
 require 'cgi'
 
 Given(/^I am on (.+)$/) do |page_name|
-  visit path_to(page_name)
+  case page_name
+  when /^the new account page$/
+    visit new_account_path
+  when /^the login page$/
+    visit login_path
+  else
+    visit path_to(page_name)
+  end
 end
 
 When(/^I go to (.+)$/) do |page_name|
@@ -23,7 +30,29 @@ end
 
 When(/^I fill in the following:$/) do |fields|
   fields.rows_hash.each do |name, value|
-    fill_in(name, with: value)
+    field_map = {
+      "Username" => "Username",
+      "Password" => "Password",
+      "Confirm Password" => "Confirm Password",
+      "Password confirmation" => "Confirm Password"
+    }
+    
+    field_identifier = field_map[name] || name
+    
+    begin
+      fill_in(field_identifier, with: value)
+    rescue Capybara::ElementNotFound
+      case field_identifier.downcase
+      when /confirm|confirmation/
+        fill_in("account[password_confirmation]", with: value)
+      when "username"
+        fill_in("account[username]", with: value)
+      when "password"
+        fill_in("account[password]", with: value)
+      else
+        raise Capybara::ElementNotFound, "Could not find field '#{name}' or '#{field_identifier}'"
+      end
+    end
   end
 end
 
