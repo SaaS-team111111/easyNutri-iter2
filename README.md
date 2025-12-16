@@ -127,7 +127,7 @@ rails db:migrate RAILS_ENV=test
 <!-- Our Testing result for iter 1:
 ![](./image.png) -->
 
- **Our Testing result for iter 2:**
+ **Our Testing result for final launch:**
 
  **Cucumber coverage**
 ![](./cucumber_coverage.png)
