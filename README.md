@@ -128,8 +128,13 @@ rails db:migrate RAILS_ENV=test
 ![](./image.png) -->
 
  **Our Testing result for iter 2:**
-![](./image2.png)
 
+ **Cucumber coverage**
+![](./cucumber_coverage.png)
+ **Rspec coverage**
+![](./rspec_coverage.png)
+ **Cucumber and Rspec combined coverage**
+![](./total_coverage.png)
 
 ## Only if something went wrong
 
